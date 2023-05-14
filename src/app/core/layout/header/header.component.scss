@@ -33,3 +33,38 @@
         margin: 0 0.5em;
     }
 }
+
+.btn {
+    width: 7rem;
+    height: 2.4rem;
+    border-radius: 50rem;
+    font-weight: bold;
+
+    font-family: 'Poppins';
+    font-style: normal;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0.07rem;
+}
+
+.btn:hover {
+    background-color: rgb(200, 199, 199);
+}
+
+.btn-primary {
+    background-color: black;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: black;
+}
+
+.info {
+    h3 {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+}

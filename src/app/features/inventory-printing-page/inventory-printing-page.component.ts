@@ -48,7 +48,7 @@ export class InventoryPrintingPageComponent {
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight / 1, 1, 1000);
     camera.position.z = 420;
     var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(800, 450);
+    renderer.setSize(500, 450);
 
 
     //threejs frame

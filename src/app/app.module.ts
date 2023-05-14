@@ -27,6 +27,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 
 
 
@@ -57,7 +58,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatSnackBarModule,
     MatProgressBarModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule
 
 
   ],
