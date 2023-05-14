@@ -1,0 +1,29 @@
+<div class="header-wrapper">
+  <div class="left-side-wrapper">
+    <div class="logo-wrapper" routerLink="/">
+      <img src="../../../assets/images/Logo.png" alt="Logo" />
+    </div>
+    <div class="app-name-wrapper">Horizontek</div>
+  </div>
+  <div class="right-side-wrapper">
+    <div *ngIf="user == {}" class="not-authen-wrapper">
+      <div class="button">
+        <button mat-stroked-button color="primary" routerLink="/register">
+          Register
+        </button>
+      </div>
+      <div class="button">
+        <button mat-flat-button color="primary" routerLink="/login">
+          Login
+        </button>
+      </div>
+    </div>
+    <div *ngIf="user != null" class="not-authen-wrapper">
+      <div class="button">
+        <h3>
+          Hi <strong>{{ user.username }}</strong>
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>

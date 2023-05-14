@@ -1,0 +1,71 @@
+<div class="home-page-wrapper">
+  <app-header></app-header>
+  <app-breadcrum [content]="'Center'"></app-breadcrum>
+  <div class="home-page-body">
+    <mat-grid-list cols="10" rowHeight="6:5" [gutterSize]="'0.6em'">
+      <mat-grid-tile [colspan]="1" [rowspan]="4" class="center-title"
+        ><div>Printing center</div></mat-grid-tile
+      >
+      <mat-grid-tile
+        [colspan]="2"
+        [rowspan]="2"
+        class="list-item"
+        routerLink="/inventory"
+        ><div class="container">
+          <div class="img-container app app-bg-1">
+            <img
+              class="center-img"
+              src="../../../assets/images/Library.png"
+              alt=""
+            />
+          </div>
+          <div class="title-container">Library</div>
+        </div></mat-grid-tile
+      >
+      <mat-grid-tile [colspan]="2" [rowspan]="2"
+        ><div class="container">
+          <div class="img-container app app-bg-2">
+            <img
+              class="center-img"
+              src="../../../assets/images/History.png"
+              alt=""
+            />
+          </div>
+          <div class="title-container">Print history</div>
+        </div></mat-grid-tile
+      >
+      <mat-grid-tile
+        [colspan]="5"
+        [rowspan]="4"
+        style="background-color: lightskyblue"
+      >
+        4</mat-grid-tile
+      >
+      <mat-grid-tile [colspan]="2" [rowspan]="2"
+        ><div class="container">
+          <div class="img-container app app-bg-3">
+            <img
+              class="center-img"
+              src="../../../assets/images/Farm.png"
+              alt=""
+            />
+          </div>
+          <div class="title-container">Printer Farm</div>
+        </div></mat-grid-tile
+      >
+      <mat-grid-tile [colspan]="2" [rowspan]="2"
+        ><div class="container">
+          <div class="img-container app app-bg-4">
+            <img
+              class="center-img"
+              src="../../../assets/images/Gocode.png"
+              alt=""
+            />
+          </div>
+          <div class="title-container">Gcode Viewer</div>
+        </div></mat-grid-tile
+      >
+    </mat-grid-list>
+  </div>
+  <app-footer></app-footer>
+</div>

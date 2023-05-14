@@ -1,0 +1,15 @@
+input {
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    height: 2.3rem;
+    background: rgba(217, 217, 217, 0.25);
+    border-radius: 25px;
+    padding: 0.4em 2em;
+
+
+}
+
+input:focus {
+    outline: none;
+}

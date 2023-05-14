@@ -1,0 +1,20 @@
+<div class="inventory-page-wrapper">
+  <app-header></app-header>
+  <app-breadcrum [content]="'Inventory'"> </app-breadcrum>
+  <div class="inventory-page-body">
+    <mat-grid-list cols="12" rowHeight="2:1" [gutterSize]="'1em'">
+      <mat-grid-tile></mat-grid-tile>
+      <mat-grid-tile class="canvas-container" colspan="7" rowspan="8">
+        <div class="change-gcode-mode" (click)="openGocdePreview()">
+          <img src="../../../assets/images/switch-icon.png" alt="" />
+        </div>
+        <div #myObject class="myObject"></div>
+      </mat-grid-tile>
+      <mat-grid-tile class="custom-printer-container" colspan="3" rowspan="8">
+        <div class="center">SETTINGS</div>
+      </mat-grid-tile>
+
+      <mat-grid-tile></mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

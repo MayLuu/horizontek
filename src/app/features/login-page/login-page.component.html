@@ -1,0 +1,83 @@
+<div class="login-page-wrapper">
+  <div class="left-side-wrapper">
+    <div class="header-wrapper">
+      <div class="left-side-wrapper">
+        <div class="logo-wrapper">
+          <img
+            src="../../../assets/images/Logo.png"
+            alt="Logo"
+            routerLink="/"
+          />
+        </div>
+        <div class="app-name-wrapper">Horizontek</div>
+      </div>
+    </div>
+    <div class="body-wrapper">
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+        class="form-wrapper"
+      >
+        <div class="header">
+          <div class="welcome">Welcome back</div>
+          <div class="sub">Please enter your detail</div>
+
+          <img src="../../../assets/images/Button.png" alt="" />
+          <!-- <div class="">{{ message }}</div> -->
+          <div class="or">Or</div>
+        </div>
+        <div class="message-error" *ngIf="error">
+          Incorrest username or password
+        </div>
+
+        <input
+          (focus)="error = false"
+          type="text"
+          name="username"
+          id=""
+          placeholder="Username *"
+          class="input"
+          [ngClass]="{ 'input-error': submitted && f['username'].errors }"
+          formControlName="username"
+        />
+        <div
+          *ngIf="submitted && f['username'].errors"
+          class="invalid-feedback required-error"
+        >
+          <div *ngIf="f['username'].errors['required']">
+            Username is required
+          </div>
+        </div>
+        <input
+          (focus)="error = false"
+          type="text"
+          name="password"
+          id=""
+          placeholder="Password *"
+          class="input"
+          [ngClass]="{ 'input-error': submitted && f['password'].errors }"
+          formControlName="password"
+        />
+        <div
+          *ngIf="submitted && f['password'].errors"
+          class="invalid-feedback required-error"
+        >
+          <div *ngIf="f['password'].errors['required']">
+            Password is required
+          </div>
+        </div>
+        <div class="forgot">Forgot password</div>
+
+        <button mat-button color="primary" class="btn black-btn">
+          Sign in
+        </button>
+        <div class="link" routerLink="/register">
+          Don’t have an account? <strong>Sign up</strong>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="right-side-wrapper">
+    <img src="../../../assets/images/Cover.png" alt="Cover image" />
+  </div>
+</div>

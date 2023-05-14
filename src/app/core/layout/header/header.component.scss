@@ -1,0 +1,35 @@
+.header-wrapper {
+    height: 70px;
+    margin: 0px 28px;
+    width: 100%;
+    max-width: 1480px;
+    display: flex;
+    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-side-wrapper {
+    display: flex;
+}
+
+.app-name-wrapper {
+    width: 161px;
+    font-family: 'DM Sans', sans-serif;
+    font-family: 'Pathway Gothic One', sans-serif;
+    font-weight: 300;
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    color: #1D3667;
+}
+
+.not-authen-wrapper {
+    display: flex;
+
+    .button {
+        margin: 0 0.5em;
+    }
+}

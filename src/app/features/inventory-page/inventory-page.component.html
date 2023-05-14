@@ -1,0 +1,173 @@
+<div class="inventory-page-wrapper">
+  <app-header></app-header>
+  <app-breadcrum [content]="'Inventory'"></app-breadcrum>
+  <div class="inventory-page-body">
+    <mat-grid-list cols="6" rowHeight="2:1" [gutterSize]="'1em'">
+      <mat-grid-tile [colspan]="2" [rowspan]="4">
+        <div class="project-list-wrapper">
+          <h2 class="title">Project Tree</h2>
+          <div><app-search></app-search></div>
+          <div class="project-list">
+            <div
+              class="project-item"
+              *ngFor="let project of projects"
+              (click)="getProjectContent(project.id)"
+            >
+              <img src="../../../assets/images/Folder icon.png" alt="" />
+              <div>{{ project.name }}</div>
+            </div>
+          </div>
+        </div></mat-grid-tile
+      >
+      <mat-grid-tile [colspan]="4" [rowspan]="4"
+        ><div class="project-content-wrapper">
+          <h2 class="title">
+            <strong> {{ currentProject.name }}</strong
+            >'s project content
+            <div class="progress-bar" *ngIf="loaderService.isLoading | async">
+              <mat-progress-bar mode="determinate"></mat-progress-bar>
+            </div>
+          </h2>
+
+          <div><app-search></app-search></div>
+          <!-- loader goes here -->
+
+          <!-- BREADCRUM  -->
+          <!-- UPLOAD HERE -->
+          <!-- <form [formGroup]="uploadForm">
+            <input
+              name="file"
+              id="file"
+              type="file"
+              (change)="handleFileInput($event)"
+              accept=".obj"
+              formControlName="file"
+              ngModel
+            /> -->
+          <!-- <input
+                hidden
+                type="text"
+                name="projectId"
+                value="{{ currentProject.id }}"
+                formControlName="projectId"
+                ngModel
+              /> -->
+          <!-- <input
+                hidden
+                type="text"
+                name="folderId"
+                value="{{ item.id }}"
+                formControlName="folderId"
+                ngModel
+              /> -->
+          <!-- </form> -->
+          <h5 class="">Folders :</h5>
+          <mat-grid-list cols="9" rowHeight="1:1">
+            <mat-grid-tile
+              *ngFor="let item of currentProject.folder; index as i"
+              (focusout)="getFolderContent(item, i)"
+              id="folder-{{ i }}"
+              class="folder-item"
+            >
+              <div>
+                <img
+                  class="folder-img"
+                  src="../../../assets/images/Folder-Medium.png"
+                  alt=""
+                />
+                <div class="name tooltip">
+                  {{ item.name }}
+                  <span class="tooltiptext">{{ item.name }}</span>
+                </div>
+              </div>
+              <!-- <form
+              [formGroup]="uploadForm"
+              (change)="onSubmit(currentProject.id, item.id)"
+            >
+              <input
+                name="file"
+                id="file"
+                type="file"
+                (change)="handleFileInput($event)"
+                accept=".obj"
+                formControlName="file"
+                ngModel
+              />
+              <input
+                hidden
+                type="text"
+                name="projectId"
+                value="{{ currentProject.id }}"
+                formControlName="projectId"
+                ngModel
+              />
+              <input
+                hidden
+                type="text"
+                name="folderId"
+                value="{{ item.id }}"
+                formControlName="folderId"
+                ngModel
+              />
+            </form> -->
+            </mat-grid-tile>
+          </mat-grid-list>
+
+          <h5 class="">Files</h5>
+          Total: {{ currentProject.files && currentProject.files.length }}
+          <mat-grid-list cols="9" rowHeight="1:1">
+            <mat-grid-tile class="file-item">
+              <div>
+                <img
+                  class="file-img"
+                  src="../../../assets/images/new-file.png"
+                  alt=""
+                />
+                <div class="name">Upload</div>
+                <form
+                  [formGroup]="uploadForm"
+                  (change)="onSubmit(currentProject.id)"
+                >
+                  <input
+                    name="file"
+                    id="file"
+                    type="file"
+                    (change)="handleFileInput($event)"
+                    accept=".obj"
+                    formControlName="file"
+                    ngModel
+                  />
+                  <input
+                    hidden
+                    type="text"
+                    name="projectId"
+                    value="{{ currentProject.id }}"
+                    formControlName="projectId"
+                    ngModel
+                  />
+                </form></div
+            ></mat-grid-tile>
+            <mat-grid-tile
+              *ngFor="let item of currentProject.files; index as i"
+              id="file-{{ i }}"
+              class="file-item"
+              (click)="getFilePreview(item)"
+            >
+              <div>
+                <img
+                  class="file-img"
+                  src="../../../assets/images/File.png"
+                  alt=""
+                />
+                <div class="name">
+                  {{ item.name }}
+                </div>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  <!-- <app-footer></app-footer> -->
+</div>
