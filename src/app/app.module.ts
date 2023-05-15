@@ -28,8 +28,12 @@ import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
-
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCardModule } from '@angular/material/card';
+import { FileExplorerComponent } from './features/file-explorer/file-explorer.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,8 @@ import { MatTableModule } from '@angular/material/table';
     FooterComponent,
     BreadcrumComponent,
     SearchComponent,
-    InventoryPrintingPageComponent
+    InventoryPrintingPageComponent,
+    FileExplorerComponent
   ],
   imports: [
     BrowserModule,
@@ -59,12 +64,18 @@ import { MatTableModule } from '@angular/material/table';
     MatProgressBarModule,
     MatInputModule,
     MatIconModule,
-    MatTableModule
+    MatTableModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatCardModule,
+    MatDialogModule,
+
 
 
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
+
   ],
   bootstrap: [AppComponent]
 })

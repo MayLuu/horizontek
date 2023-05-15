@@ -1,37 +1,16 @@
 import { Component, ElementRef, EventEmitter, Renderer2 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
-import { Observable, pipe, tap } from 'rxjs';
+import { BehaviorSubject, Observable, pipe, tap } from 'rxjs';
 import { Folder } from 'src/app/core/models/folder.model';
 import { Project } from 'src/app/core/models/project.model';
 import { InventoryService, ResponseBody } from 'src/app/core/services/inventory.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { File } from 'src/app/core/models/file.model';
+import { FileElement } from 'src/app/core/models/element.model';
+import { FileService } from 'src/app/core/services/file.service';
 
-export class TableStickyHeaderExample {
-  displayedColumns = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
-}
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
 
 
 @Component({
@@ -42,9 +21,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 
 export class InventoryPageComponent {
-  displayedColumns: string[] = ['', 'No', 'Name', 'File Name', 'Size', 'Application', ''];
-  dataSource = ELEMENT_DATA;
-  clickedRows = new Set<Element>();
 
   projects: Project[] = [];
   currentProject: any = {};
@@ -59,7 +35,8 @@ export class InventoryPageComponent {
     private renderer: Renderer2,
     private _fb: FormBuilder,
     public loaderService: LoaderService,
-    private router: Router) {
+    private router: Router,
+    public fileService: FileService) {
 
   }
 
@@ -72,6 +49,14 @@ export class InventoryPageComponent {
       projectId: [''],
       folderId: ['']
     })
+    //for file explorer
+    const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
+    this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
+    this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id as string });
+    this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
+    this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
+
+    this.updateFileElementQuery();
 
   }
   getAllProjects(): void {
@@ -175,4 +160,71 @@ export class InventoryPageComponent {
   }
 
 
+  //file exploreer
+  public fileElements!: Observable<any>;
+
+
+
+  currentRoot!: FileElement;
+  currentPath!: string;
+  canNavigateUp = false as any;
+
+
+
+  addFolder(folder: { name: string }) {
+    this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id as string : 'root' });
+    this.updateFileElementQuery();
+  }
+
+  removeElement(element: FileElement) {
+    this.fileService.delete(element.id as string);
+    this.updateFileElementQuery();
+  }
+
+  navigateToFolder(element: FileElement) {
+    this.currentRoot = element;
+    this.updateFileElementQuery();
+    this.currentPath = this.pushToPath(this.currentPath, element.name);
+    this.canNavigateUp = true;
+  }
+
+  navigateUp() {
+    if (this.currentRoot && this.currentRoot.parent === 'root') {
+      this.currentRoot = null as any;
+      this.canNavigateUp = false;
+      this.updateFileElementQuery();
+    } else {
+      this.currentRoot = this.fileService.get(this.currentRoot.parent);
+      this.updateFileElementQuery();
+    }
+    this.currentPath = this.popFromPath(this.currentPath);
+  }
+
+  moveElement(event: { element: FileElement; moveTo: FileElement }) {
+    this.fileService.update(event.element.id as string, { parent: event.moveTo.id });
+    this.updateFileElementQuery();
+  }
+
+  renameElement(element: FileElement) {
+    this.fileService.update(element.id as string, { name: element.name });
+    this.updateFileElementQuery();
+  }
+
+  updateFileElementQuery() {
+    this.fileElements = this.fileService.queryInFolder(this.currentRoot ? this.currentRoot.id as string : 'root');
+  }
+
+  pushToPath(path: string, folderName: string) {
+    let p = path ? path : '';
+    p += `${folderName}/`;
+    return p;
+  }
+
+  popFromPath(path: string) {
+    let p = path ? path : '';
+    let split = p.split('/');
+    split.splice(split.length - 2, 1);
+    p = split.join('/');
+    return p;
+  }
 }
