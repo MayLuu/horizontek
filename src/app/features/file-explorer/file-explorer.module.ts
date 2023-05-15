@@ -20,7 +20,6 @@ import { RenameDialogComponent } from './modals/rename-dialog/rename-dialog.comp
         MatGridListModule,
         MatMenuModule,
         BrowserAnimationsModule,
-        MatDialogModule,
         MatInputModule,
         FormsModule,
         MatButtonModule

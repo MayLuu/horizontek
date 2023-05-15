@@ -9,7 +9,7 @@ import { RenameDialogComponent } from './modals/rename-dialog/rename-dialog.comp
 @Component({
   selector: 'file-explorer',
   templateUrl: './file-explorer.component.html',
-  styleUrls: ['./file-explorer.component.css']
+  styleUrls: ['./file-explorer.component.scss']
 })
 export class FileExplorerComponent {
   constructor(public dialog: MatDialog) { }
