@@ -45,7 +45,7 @@ export class InventoryPrintingPageComponent {
     var scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
     // var mtlLoader = new MaterialLoader();
-    var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight / 1, 1, 1000);
+    var camera = new THREE.PerspectiveCamera(50, window.innerWidth / 1.35 / window.innerHeight / 1.35, 1, 1000);
     camera.position.z = 420;
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(500, 450);

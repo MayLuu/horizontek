@@ -34,6 +34,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { FileExplorerComponent } from './features/file-explorer/file-explorer.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMenuModule,
     MatCardModule,
     MatDialogModule,
+    MatTreeModule
 
 
 

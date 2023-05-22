@@ -1,3 +1,5 @@
+import { Folder } from "./folder.model";
+
 export interface Project {
     id: string;
     userId: string;

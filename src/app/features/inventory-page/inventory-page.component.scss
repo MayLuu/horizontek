@@ -23,8 +23,9 @@
 .project-list,
 .project-content-wrapper {
     margin: 1rem 0;
-    height: 100%;
-    overflow-x: scroll;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 27em;
 }
 
 //custom scroll
@@ -73,6 +74,22 @@
 
 }
 
+mat-tree-node {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    display: flex;
+    align-items: center;
+    margin-left: 0.7em;
+    color: black;
+}
+
+.folder-icon {
+    margin-right: 1em;
+}
+
 .project-item:hover {
 
     background-color: #8888881b;
@@ -81,17 +98,17 @@
 
 .folder-item,
 .file-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
+    display: block;
 
     div {
-
+        display: flex;
+        width: 100%;
 
         .name {
 
             white-space: nowrap;
-            width: 3.5rem;
+            // width: 3.5rem;
             overflow: hidden;
             text-overflow: ellipsis;
             text-align: center;
@@ -121,6 +138,53 @@
         // }
     }
 }
+
+mat-grid-tile.table {
+    width: 100%;
+    display: flex;
+    height: max-content;
+
+    table {
+        background-color: #888;
+
+    }
+
+}
+
+th {
+    position: sticky;
+    top: 0;
+}
+
+.upload-item {
+
+    div {
+        width: 100%;
+        display: flex;
+
+        .name {
+            margin-left: 2em;
+            display: flex;
+            font-weight: bold;
+            color: black;
+            font-family: 'Poppins';
+            font-style: normal;
+            flex-direction: column;
+
+            .sub {
+                font-weight: 400;
+            }
+        }
+    }
+}
+
+.upload-button {
+    border: #555 2px solid;
+    padding: 0.4em;
+    border-radius: 0.4em;
+}
+
+
 
 .progress-bar {
     margin: 0 auto;

@@ -1,18 +1,48 @@
+import { Project } from './../../core/models/project.model';
+import { File } from './../../core/models/file.model';
 import { Component, ElementRef, EventEmitter, Renderer2 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { BehaviorSubject, Observable, pipe, tap } from 'rxjs';
 import { Folder } from 'src/app/core/models/folder.model';
-import { Project } from 'src/app/core/models/project.model';
 import { InventoryService, ResponseBody } from 'src/app/core/services/inventory.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { File } from 'src/app/core/models/file.model';
 import { FileElement } from 'src/app/core/models/element.model';
 import { FileService } from 'src/app/core/services/file.service';
 
 
+//for tree
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 
+/**
+ * Food data with nested structure.
+ * Each node has a name and an optional list of children.
+ */
 
+interface ProjectNode {
+  id: string;
+  name: string;
+  files?: File[];
+  children?: Folder[]
+}
+
+/** Flat node with expandable and level information */
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+  n: ProjectNode
+}
+
+export interface PeriodicElement {
+  id: string;
+  position: number;
+  name: string;
+  img: string;
+  size: string;
+  application: string;
+}
 @Component({
   selector: 'app-inventory-page',
   templateUrl: './inventory-page.component.html',
@@ -23,13 +53,83 @@ import { FileService } from 'src/app/core/services/file.service';
 export class InventoryPageComponent {
 
   projects: Project[] = [];
-  currentProject: any = {};
-  currentChildrens: Folder[] = [];
+  currentProject!: ProjectNode;
+  currentProjectNode: ProjectNode[] = [];
+
+
+  currentChildrens: File[] = [];
+  currentFiles: File[] = [];
+
+  currentNode!: ProjectNode;
   file!: any;
   fileName: string = "";
 
   //upload form
   uploadForm!: FormGroup;
+
+  //tree goes here
+  private _transformer = (node: ProjectNode, level: number) => {
+    return {
+      // expandable: !!node.children && node.children.length > 0,
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level,
+      n: node
+    };
+  };
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable,
+  );
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.children,
+
+
+  );
+
+  //TABLE
+  columns = [
+    {
+      columnDef: 'image',
+      header: '',
+      cell: (element: PeriodicElement) => `${element.id}`,
+    },
+    {
+      columnDef: 'position',
+      header: 'No.',
+      cell: (element: PeriodicElement) => `${element.position}`,
+    },
+    {
+      columnDef: 'name',
+      header: 'Name',
+      cell: (element: PeriodicElement) => `${element.name}`,
+    },
+    {
+      columnDef: 'size',
+      header: 'Size',
+      cell: (element: PeriodicElement) => `${element.size}`,
+    },
+    {
+      columnDef: 'application',
+      header: 'Application',
+      cell: (element: PeriodicElement) => `${element.application}`,
+    },
+    // {
+    //   columnDef: 'action',
+    //   header: '',
+    //   cell: (element: PeriodicElement) => `${element.application}`,
+    // },
+  ];
+  tableData: PeriodicElement[] = [];
+
+  displayedColumns = this.columns.map(c => c.columnDef);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   constructor(private inventoryService: InventoryService,
     private element: ElementRef,
     private renderer: Renderer2,
@@ -37,13 +137,20 @@ export class InventoryPageComponent {
     public loaderService: LoaderService,
     private router: Router,
     public fileService: FileService) {
+    //tree
+    // this.dataSource.data = TREE_DATA;
+    // this.dataSource.data = this.currentProjectNode;
 
   }
 
+  //tree
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
 
   ngOnInit() {
     this.getAllProjects();
+
+
     this.uploadForm = this._fb.group({
       file: [''],
       projectId: [''],
@@ -58,17 +165,75 @@ export class InventoryPageComponent {
 
     this.updateFileElementQuery();
 
+
   }
   getAllProjects(): void {
     this.inventoryService.getAllProjects().subscribe(data => {
       this.projects = data.data;
-      this.currentProject = data.data[0]
+      console.log(data.data[0]);
+      console.log(typeof this.currentProject)
+      this.currentProject = {
+        id: data.data[0].id,
+        name: data.data[0].name,
+        files: data.data[0].file,
+        children: data.data[0].folder
+      }
+
+
+      this.projects.map(p => {
+        var folderArr!: Folder[];
+        var fileArr!: File[];
+        this.inventoryService.getProjectById(p.id).subscribe(res => {
+          folderArr = res.data.folder;
+          fileArr = res.data.files;
+          this.currentProjectNode.push(Object.assign({}, { id: p.id, name: p.name, files: fileArr, children: folderArr }));
+
+          this.dataSource.data = this.currentProjectNode
+
+          this.getProjectContent(this.currentProjectNode as any)
+        })
+
+      }
+
+      )
+
+      //TREE
+      //first : clone {name, folder: null} to this.currentProjectNode use myArr.map( val => myCopy.push( Object.assign({}, val.name, this.currentProject.folder))
+      //second : in getProjectContent func , pass folder property of first project to this.currentProjectNode[0].children
+      console.log(this.currentProjectNode)
+
     });
-    console.log(this.projects)
+
+
   }
-  getProjectContent(projectId: string): void {
-    console.log(this.inventoryService.getProjectById(projectId).subscribe(data => this.currentProject = data.data))
+
+  getProjectContent(node: ProjectNode): void {
+    console.log(node)
+
+    this.currentNode = node;
+    this.currentProject = node
+    this.currentChildrens = node.files as File[];
+    this.tableData = []
+    node.files && node.files.map(i => this.tableData.push(Object.assign({},
+      {
+        id: i.id,
+        position: Date.now(),
+        name: i.name,
+        img: "alo",
+        size: "2MB",
+        application: "Inventory",
+      }
+
+    ))
+    )
+
+    console.log('table', this.tableData)
+
+
+
   }
+
+
   getFolderContent(item: Folder, i: Number) {
 
     let selected = document.getElementById('folder-' + i) as HTMLElement;
@@ -104,24 +269,45 @@ export class InventoryPageComponent {
     this.uploadForm.get('file')?.setValue(file)
 
   }
-  onSubmit(projectId: string) {
+  onSubmit(current: any) {
     console.log('form');
-    console.log(this.uploadForm.controls);
-
+    // console.log(this.uploadForm.controls);
+    console.log('id')
+    console.log(this.currentNode)
     var formData: any = new FormData();
-
+    console.log(current)
     formData.append('uploads', this.uploadForm.get('file')?.value);
-    formData.append('projectId', projectId);
-    // formData.append('folderId', folderId);
+    console.log(Object.keys(this.currentNode).length)
+    if (Object.keys(this.currentNode).length > 4) {
+      console.log(this.currentNode.id, 'folder')
+      formData.append('folderId', this.currentNode.id)
 
-    console.log('body', formData)
+    } else {
+      console.log(this.currentProject, 'project')
+      formData.append('projectId', this.currentProject.id);
+    }
+
+
+
+
+    // console.log('body', formData)
 
     let res: any
     this.inventoryService.uploadFile(formData).subscribe(data => {
       res = data;
       if (res.code == 200) {
         console.log(res.data)
-        this.currentProject.files.push(res.data[0])
+        this.currentProject.files?.push(res.data[0])
+        this.tableData.push(
+          {
+            id: res.data[0].id,
+            position: Date.now(),
+            name: res.data[0].name,
+            img: "alo",
+            size: "2MB",
+            application: "Inventory",
+          }
+        )
       }
     })
 
@@ -142,7 +328,7 @@ export class InventoryPageComponent {
     this.inventoryService.uploadFile(formData).subscribe(data => {
       res = data;
 
-      this.currentProject.files.push(res.data[0])
+      this.currentProject.files?.push(res.data[0])
 
     })
 
