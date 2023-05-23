@@ -101,7 +101,7 @@ export class InventoryPageComponent {
     },
     {
       columnDef: 'position',
-      header: 'No.',
+      header: 'No',
       cell: (element: PeriodicElement) => `${element.position}`,
     },
     {

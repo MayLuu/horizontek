@@ -2,17 +2,101 @@
   <app-header></app-header>
   <app-breadcrum [content]="'Inventory'"> </app-breadcrum>
   <div class="inventory-page-body">
-    <mat-grid-list cols="12" rowHeight="2:1" [gutterSize]="'1em'">
-      <mat-grid-tile></mat-grid-tile>
-      <mat-grid-tile class="canvas-container" colspan="7" rowspan="8">
+    <mat-grid-list cols="20" rowHeight="2:1" [gutterSize]="'1em'">
+      <mat-grid-tile colspan="2"></mat-grid-tile>
+      <mat-grid-tile
+        class="canvas-container white-bg"
+        colspan="10"
+        rowspan="13"
+      >
         <div class="change-gcode-mode" (click)="openGocdePreview()">
           <img src="../../../assets/images/switch-icon.png" alt="" />
         </div>
         <div #myObject class="myObject"></div>
       </mat-grid-tile>
+      <mat-grid-tile colspan="1"></mat-grid-tile>
 
-      <mat-grid-tile class="custom-printer-container" colspan="3" rowspan="8">
-        <div class="center">SETTINGS</div>
+      <mat-grid-tile
+        class="custom-printer-container white-bg"
+        colspan="5"
+        rowspan="13"
+      >
+        <div class="center">
+          <div class="setting-title">Settings</div>
+          <form [formGroup]="printingForm" (change)="onSubmit()">
+            <div class="row">
+              <div class="label">Choose 3D printer</div>
+
+              <div class="input-field">
+                <select name="printer" id="">
+                  <option value="" selected>Printer A</option>
+                  <option value="" selected>Printer B</option>
+                  <option value="" selected>Printer C</option>
+                  <option value="" selected>Printer D</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="label">Choose quality</div>
+            </div>
+            <div class="row">
+              <div class="input-field select-field">
+                <mat-radio-group>
+                  <mat-radio-button value="0" color="primary"
+                    >Draft</mat-radio-button
+                  >
+                  <mat-radio-button color="primary" value="1"
+                    >Normal</mat-radio-button
+                  >
+                  <mat-radio-button color="primary" value="2"
+                    >Good</mat-radio-button
+                  >
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="row">
+              <div class="label">Fill density</div>
+              <div class="input-field">
+                <input
+                  type="text"
+                  name="density"
+                  placeholder="ex: 30%"
+                  class="input body2"
+                  ngModel
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="label">Material</div>
+              <div class="input-field">
+                <select name="printer" id="">
+                  <option value="" selected>Printer A</option>
+                  <option value="" selected>Printer B</option>
+                  <option value="" selected>Printer C</option>
+                  <option value="" selected>Printer D</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="button">
+                <button mat-button color="primary" class="btn yellow-btn">
+                  Estimate
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="label">Estimated Time</div>
+              <div class="label">0 hour</div>
+            </div>
+            <div class="row">
+              <div class="button">
+                <button mat-button color="primary" class="btn black-btn">
+                  Print
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </mat-grid-tile>
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>

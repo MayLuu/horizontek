@@ -18,6 +18,7 @@ export class InventoryPrintingPageComponent {
   url!: any;
   responseData!: Blob;
 
+  printingForm!: any;
   constructor(private router: Router,
     private http: HttpClient,
     private sanitizer: DomSanitizer) {
@@ -34,7 +35,7 @@ export class InventoryPrintingPageComponent {
 
   }
   //get file content by call api
-  public loadObjFileFromAPI() {
+  loadObjFileFromAPI() {
     let link: string = environment.api + this.fileName + '-' + this.fileId + '.obj';
     console.log('link ', link)
     var start = new Date().getTime();
@@ -62,8 +63,6 @@ export class InventoryPrintingPageComponent {
     can!.style.position = 'relative';
 
 
-
-
     var controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
@@ -88,8 +87,18 @@ export class InventoryPrintingPageComponent {
     animate();
 
   }
+
   openGocdePreview() {
-    console.log()
+    console.log('alo')
+  }
+
+  //get data for custom printer: all printers, time estimated
+  onSubmit() {
+
+  }
+
+  print() {
+
   }
   ngAfterContentInit() {
     this.loadObjFileFromAPI()

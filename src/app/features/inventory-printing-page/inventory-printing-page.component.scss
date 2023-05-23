@@ -1,25 +1,27 @@
 .inventory-page-body {
     height: 70vh;
     width: 100%;
-    margin: 2em 0;
+    margin: 5em 0;
 }
 
-mat-grid-tile {}
+
+
 
 .canvas-container {
-    border: 1.5px solid #a3a1a19b;
     border-radius: 8px;
+    box-shadow: 1px 2px 10px 2px #e0e0e09b;
 }
 
 .custom-printer-container {
-    border: 1.5px solid #a3a1a19b;
     border-radius: 8px;
+    box-shadow: 1px 2px 10px 2px #e0e0e09b;
     width: 100%;
 }
 
 .center {
-    display: flex;
-    justify-content: center;
+    width: 100%;
+    margin: 4em 1.5em;
+    height: 95%;
 }
 
 .change-gcode-mode {
@@ -27,4 +29,91 @@ mat-grid-tile {}
     z-index: 2;
     top: 1em;
     right: 1em;
+}
+
+select {
+    width: 11.3em;
+    height: 3em;
+    border: none;
+    border-bottom: 2px solid black;
+    padding: 3em auto;
+    text-align: center;
+
+    option {
+        padding: 2em 0;
+    }
+}
+
+select:focus {
+    outline: none;
+}
+
+.setting-title {
+    font-size: 1.4rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin: 0.3em;
+}
+
+form {
+    width: 100%;
+    justify-content: flex-start;
+
+    .row {
+        margin: 0.8em 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1em;
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+
+        .input-field {
+            display: flex;
+
+        }
+
+        .button {
+            width: 100%;
+        }
+
+        .select-field {
+
+            width: 100%;
+
+            mat-radio-group {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+
+
+
+            }
+        }
+    }
+}
+
+.btn {
+    margin: 1em auto;
+    width: 100%;
+    height: 38px;
+    border-radius: 50px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+
+
+}
+
+.black-btn {
+    background-color: black;
+    color: white !important;
+}
+
+.yellow-btn {
+    background-color: #F8A544;
+    color: white !important;
 }

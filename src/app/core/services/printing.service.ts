@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HandleError, HttpErrorHandlerService } from './http-error-handler.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,4 +21,9 @@ export class PrintingService {
   //get printer by Id
 
   //post to print
+  requestPrint(formData: any): Observable<any> {
+    console.log(this.http.post<any>(this.printingUrl, formData))
+    return this.http.post<any>(this.printingUrl, formData)
+
+  }
 }
