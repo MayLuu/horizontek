@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { environment } from 'environment';
+import { PrintingService } from 'src/app/core/services/printing.service';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -18,10 +19,11 @@ export class InventoryPrintingPageComponent {
   url!: any;
   responseData!: Blob;
 
-  printingForm!: any;
+  printingForm: any;
   constructor(private router: Router,
     private http: HttpClient,
-    private sanitizer: DomSanitizer) {
+    private sanitizer: DomSanitizer,
+    private printingService: PrintingService) {
 
     const navigation = this.router.getCurrentNavigation();
 
@@ -32,7 +34,6 @@ export class InventoryPrintingPageComponent {
 
   }
   OnInit() {
-
   }
   //get file content by call api
   loadObjFileFromAPI() {
@@ -94,11 +95,29 @@ export class InventoryPrintingPageComponent {
 
   //get data for custom printer: all printers, time estimated
   onSubmit() {
+    this.printingForm = new FormData()
 
+    this.printingForm.append('printerId', "00-1B-63-84-45-E6");
+    this.printingForm.append('fileId', this.fileId);
+    this.printingForm.append('status', 'PENDING')
+
+    console.log('form', this.printingForm)
+    console.log(this.printingService.print(this.printingForm).subscribe(data =>
+      console.log('aloooo', data)))
+      ;
   }
 
   print() {
+    this.printingForm = new FormData()
 
+    this.printingForm.append('printerId', "00-1B-63-84-45-E6");
+    this.printingForm.append('fileId', "ff474839-f61e-11ed-8819-0242c0a8c002");
+    this.printingForm.append('status', 'PENDING')
+
+    console.log('form', this.printingForm)
+    console.log(this.printingService.print(this.printingForm).subscribe(data =>
+      console.log('aloooo', data)))
+      ;
   }
   ngAfterContentInit() {
     this.loadObjFileFromAPI()

@@ -1,9 +1,10 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth-service/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { JwtService } from 'src/app/core/services/jwt.service';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
@@ -14,13 +15,20 @@ export class LoginPageComponent implements OnInit {
   loading = false;
   submitted = false;
   error = false;
+
+  isLoggedIn = false;
+  isLoginFailed = false;
+
   constructor(
 
     public router: Router,
     private route: ActivatedRoute,
-    public authService: AuthService,//account service
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
+
+    private authService: AuthService,
+    private tokenStorage: JwtService
+
+
   ) {
     // this.message = this.getMessage();
   }
@@ -30,6 +38,10 @@ export class LoginPageComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     })
+
+    if (this.tokenStorage.getToken()) {
+      this.isLoggedIn = true;
+    }
   }
 
   // convenience getter for easy access to form fields
@@ -59,16 +71,41 @@ export class LoginPageComponent implements OnInit {
     //       this.loading = false;
     //     }
     //   });
-    const user = this.authService.login(this.f['username'].value, this.f['password'].value)
-    if (user == null) {
-      this.error = true;
-      this.router.navigateByUrl('/login');
-    } else {
-      this.router.navigateByUrl('/')
+    // const user = this.authService.login(this.f['username'].value, this.f['password'].value)
+    // if (user == null) {
+    //   this.error = true;
+    //   this.router.navigateByUrl('/login');
+    // } else {
+    //   this.router.navigateByUrl('/')
+    // }
+    // console.log(this.authService.login(this.f['username'].value, this.f['password'].value));
+
+    let form = {
+      username: this.f['username'].value,
+      password: this.f['password'].value
     }
-    console.log(this.authService.login(this.f['username'].value, this.f['password'].value));
+    console.log('login user:', form)
+    this.authService.login(form).subscribe(
+      data => {
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser(data);
+
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.reloadPage();
+      },
+      err => {
+        this.error = true;
+        this.isLoginFailed = true;
+      }
+    );
 
   }
+
+  reloadPage(): void {
+    window.location.reload();
+  }
+
 
 
 

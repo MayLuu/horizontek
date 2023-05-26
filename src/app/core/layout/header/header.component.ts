@@ -1,7 +1,7 @@
 import { UserService } from './../../services/user.service';
 import { Component, Input } from '@angular/core';
 import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth-service/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -9,16 +9,16 @@ import { AuthService } from '../../services/auth-service/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  user: User | null;
+  // user: User | null;
 
   constructor(private authService: AuthService) {
-    this.user = this.authService.userValue;
-    console.log('user', this.user)
+    // this.user = this.authService.userValue;
+    // console.log('user', this.user)
   }
   logout() {
-    this.authService.logout();
-    console.log('user: ', this.user)
-    this.user = this.authService.userValue
+    // this.authService.logout();
+    // console.log('user: ', this.user)
+    // this.user = this.authService.userValue
   }
 
 }
