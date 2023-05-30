@@ -1,0 +1,117 @@
+.printer-wrapper {
+    margin: 2em 2em
+}
+
+.running-wrapper,
+.available-wrapper {
+    width: 100%;
+
+    .wrapper-title {
+        height: 2em;
+        display: flex;
+        margin-bottom: 1.5em;
+
+        .title {
+            width: 80%;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5em;
+            font-weight: bolder;
+            color: black;
+
+        }
+
+        .search-wrapper {
+            width: 20%;
+        }
+    }
+}
+
+.running-list {
+    display: flex;
+
+    .p-item {
+        margin-right: 3em;
+        width: 200px;
+        height: 200px;
+        background-color: #f8a4441d;
+        border-radius: 0.5em;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        position: relative;
+
+        .center {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+
+            .title {
+                font-family: 'Poppins';
+                font-style: normal;
+                font-weight: 500;
+                font-size: 13px;
+                line-height: 20px;
+                text-align: center;
+            }
+
+            .left-time {
+                font-family: 'Poppins';
+                font-style: italic;
+                font-weight: 400;
+                font-size: 8px;
+                line-height: 12px;
+                text-align: center;
+
+            }
+        }
+
+        .progress {
+            position: absolute;
+            display: flex;
+            flex-direction: row;
+            width: 10%;
+            right: 20%;
+
+            top: 50%;
+
+            .bar {
+
+
+
+                mat-progress-bar {
+                    transform: rotate(-90deg) scale(2);
+                    width: 80px;
+                    border-radius: 8px;
+                    background-color: black;
+                    position: absolute;
+                    left: -20%
+                }
+
+
+            }
+
+            .percent {
+                font-family: 'Poppins';
+                font-style: italic;
+                font-weight: bold;
+                font-size: 8px;
+                line-height: 12px;
+                text-align: center;
+                padding-left: 1.5em
+            }
+
+            // mat-progress-bar {
+            //     height: 80% !important;
+            //     width: 25%;
+
+
+            // }
+        }
+    }
+}
+
+.mdc-linear-progress__bar {
+    width: 20px !important;
+    height: 100%;
+}

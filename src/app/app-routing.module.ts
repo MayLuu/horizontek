@@ -7,6 +7,9 @@ import { LoginPageComponent } from "./features/login-page/login-page.component";
 import { InventoryPageComponent } from "./features/inventory-page/inventory-page.component";
 import { RegisterPageComponent } from "./features/register-page/register-page.component";
 import { InventoryPrintingPageComponent } from "./features/inventory-printing-page/inventory-printing-page.component";
+import { AuthGuard } from "./core/services/auth-guard.service";
+import { PrinterWarehouseComponent } from "./features/printer-warehouse/printer-warehouse.component";
+import { ErrorComponent } from "./features/error/error.component";
 
 
 const routes: Routes = [
@@ -19,9 +22,7 @@ const routes: Routes = [
   {
     path: "login",
     component: LoginPageComponent,
-    // canActivate: [
-    //   () => inject(UserService).isAuthenticated.pipe(map((isAuth) => !isAuth)),
-    // ],
+
   },
   {
     path: "register",
@@ -31,21 +32,29 @@ const routes: Routes = [
   {
     path: "inventory",
     component: InventoryPageComponent,
-
-
+    // canActivate: [AuthGuard]
   },
   {
     path: "inventory/preview",
     component: InventoryPrintingPageComponent,
+    // canActivate: [AuthGuard]
+
 
 
   },
+  {
+    path: "warehouse",
+    component: PrinterWarehouseComponent,
+  },
+  {
+    path: "error",
+    component: ErrorComponent,
+  },
+  {
+    path: "**",
+    redirectTo: "",
 
-  // {
-  //   path: "**",
-  // redirectTo: "",
-
-  // },
+  },
 ];
 
 @NgModule({

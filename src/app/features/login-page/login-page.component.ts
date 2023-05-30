@@ -5,6 +5,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { JwtService } from 'src/app/core/services/jwt.service';
+import { User } from 'src/app/core/models/user.model';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
@@ -85,19 +86,39 @@ export class LoginPageComponent implements OnInit {
       password: this.f['password'].value
     }
     console.log('login user:', form)
-    this.authService.login(form).subscribe(
-      data => {
-        this.tokenStorage.saveToken(data.accessToken);
-        this.tokenStorage.saveUser(data);
 
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.reloadPage();
+    this.authService.login(form).subscribe(
+      res => {
+        if (res.code == 200) {
+          console.log('TOKEN', res.token)
+          this.tokenStorage.saveToken(res.token);
+
+          console.log(this.tokenStorage.decodeToken(res.token))
+          let acc: User = this.tokenStorage.decodeToken(res.token)
+          this.tokenStorage.saveUser(acc);
+
+          this.isLoginFailed = false;
+          this.isLoggedIn = true;
+
+          this.router.navigateByUrl('/');
+
+
+        }
       },
-      err => {
-        this.error = true;
-        this.isLoginFailed = true;
-      }
+      err => console.log('HTTP Error', err),
+      () => console.log('HTTP request completed.')
+      // data => {
+      //   this.tokenStorage.saveToken(data.accessToken);
+      //   this.tokenStorage.saveUser(data);
+
+      //   this.isLoginFailed = false;
+      //   this.isLoggedIn = true;
+      //   this.reloadPage();
+      // },
+      // err => {
+      //   this.error = true;
+      //   this.isLoginFailed = true;
+      // }
     );
 
   }

@@ -107,7 +107,7 @@ export class InventoryPageComponent {
     {
       columnDef: 'name',
       header: 'Name',
-      cell: (element: PeriodicElement) => `${element.name}`,
+      cell: (element: PeriodicElement) => `${element.name}.obj`,
     },
     {
       columnDef: 'size',
@@ -207,7 +207,14 @@ export class InventoryPageComponent {
 
   }
 
-  getProjectContent(node: ProjectNode): void {
+  getProjectContent(node: ProjectNode, id?: string): void {
+    console.log('ID', node.id);
+
+    let active = document.getElementById(node.id) as HTMLInputElement | null;
+    console.log(active)
+    if (active != null) {
+      active.style.backgroundColor = '#FAEBD7'
+    }
     console.log(node)
 
     this.currentNode = node;

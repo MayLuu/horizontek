@@ -38,6 +38,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { PrinterWarehouseComponent } from './features/printer-warehouse/printer-warehouse.component';
+import { ErrorComponent } from './features/error/error.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     BreadcrumComponent,
     SearchComponent,
     InventoryPrintingPageComponent,
-    FileExplorerComponent
+    FileExplorerComponent,
+    PrinterWarehouseComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +86,7 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 
 
   ],

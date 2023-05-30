@@ -1,8 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { environment } from 'environment';
+import { Observable } from 'rxjs';
+import { Printer } from 'src/app/core/models/printer.model';
+import { PrinterService } from 'src/app/core/services/printer.service';
 import { PrintingService } from 'src/app/core/services/printing.service';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -20,10 +24,23 @@ export class InventoryPrintingPageComponent {
   responseData!: Blob;
 
   printingForm: any;
+
+  printersList: Printer[] = [];
+  selectedVal: string = "00-1B-63-84-45-E6";
+  selectedQua: string = "0";
+  selectedMat: string = "A";
+
+  progress$!: Observable<any>;
+
+  isSliced: boolean = false;
+  isIntended: boolean = false;
+
+
   constructor(private router: Router,
     private http: HttpClient,
     private sanitizer: DomSanitizer,
-    private printingService: PrintingService) {
+    private printingService: PrintingService,
+    private printerService: PrinterService) {
 
     const navigation = this.router.getCurrentNavigation();
 
@@ -32,9 +49,33 @@ export class InventoryPrintingPageComponent {
     this.fileId = state.fileId;
     this.fileName = state.fileName;
 
+    this.printingForm = new FormGroup({
+      printer: new FormControl(),
+      quality: new FormControl(),
+      material: new FormControl(),
+    })
+
   }
   OnInit() {
+
+
+    this.progress$ = this.printerService.progress$
+    console.log(this.printerService.getPrinterProgress())
+
+
   }
+  ngAfterContentInit() {
+    this.loadObjFileFromAPI();
+    // console.log(this.printerService.OnInit())
+    this.progress$ = this.printerService.progress$
+
+    console.log(this.printerService.getAllPrinters().subscribe(data => {
+      console.log(data)
+      this.printersList = data.data;
+      console.log(this.printersList)
+    }))
+  }
+
   //get file content by call api
   loadObjFileFromAPI() {
     let link: string = environment.api + this.fileName + '-' + this.fileId + '.obj';
@@ -88,39 +129,55 @@ export class InventoryPrintingPageComponent {
     animate();
 
   }
-
   openGocdePreview() {
-    console.log('alo')
+    this.isSliced = true
   }
 
   //get data for custom printer: all printers, time estimated
   onSubmit() {
-    this.printingForm = new FormData()
+    // this.printingForm = new FormData()
 
-    this.printingForm.append('printerId', "00-1B-63-84-45-E6");
-    this.printingForm.append('fileId', this.fileId);
-    this.printingForm.append('status', 'PENDING')
+    // this.printingForm.append('printerId', "00-1B-63-84-45-E6");
+    // this.printingForm.append('fileId', this.fileId);
+    // this.printingForm.append('status', 'PENDING')
 
-    console.log('form', this.printingForm)
-    console.log(this.printingService.print(this.printingForm).subscribe(data =>
-      console.log('aloooo', data)))
-      ;
+    // console.log('form', this.printingForm)
+    // console.log(this.printingService.print(this.printingForm).subscribe(data =>
+    //   console.log('aloooo', data)))
+    //   ;
+    console.log('onsub')
+    console.log(this.printingForm.value);
+
+    this.print()
   }
-
   print() {
-    this.printingForm = new FormData()
+    let body = new FormData()
 
-    this.printingForm.append('printerId', "00-1B-63-84-45-E6");
-    this.printingForm.append('fileId', "ff474839-f61e-11ed-8819-0242c0a8c002");
-    this.printingForm.append('status', 'PENDING')
+    body.append('printerId', "00-1B-63-84-45-E6");
+    body.append('fileId', "ff474839-f61e-11ed-8819-0242c0a8c002");
+    body.append('status', 'PENDING')
 
-    console.log('form', this.printingForm)
-    console.log(this.printingService.print(this.printingForm).subscribe(data =>
-      console.log('aloooo', data)))
-      ;
+    console.log(this.printingService.print(body).subscribe(
+      res => {
+        console.log(res.data)
+      },
+      err => { console.log(err) },
+      () => {
+        this.router.navigate(['warehouse'])
+      }
+    ))
+
+
   }
-  ngAfterContentInit() {
-    this.loadObjFileFromAPI()
+
+  //control printing
+
+
+  intend() {
+    this.isIntended = true;
   }
+
+
+
 
 }

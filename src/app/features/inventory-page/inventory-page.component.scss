@@ -1,5 +1,17 @@
+.style-node {
+    background-color: #faebd7;
+    width: 14em;
+    border-radius: 8px;
+}
+
+mat-tree-node:active {
+    background-color: antiquewhite;
+    width: 14em;
+    border-radius: 8px;
+}
+
 .inventory-page-body {
-    margin: 2rem;
+    padding: 1.5rem 0;
     font-family: 'Poppins', sans-serif;
 
 }
@@ -12,20 +24,54 @@
     .title {
         text-align: center;
         font-family: 'Poppins';
-        font-weight: 600;
-        font-size: large;
+        font-weight: bolder;
+        color: black;
+        font-size: 1.25rem;
         height: 2rem;
 
     }
 
 }
 
+.upload-wrapper {
+    img {
+        margin-left: 1em;
+    }
+
+    div {
+        margin-left: 7em;
+    }
+}
+
+
+
 .project-list,
 .project-content-wrapper {
     margin: 1rem 0;
     overflow: scroll;
     overflow-x: hidden;
-    height: 27em;
+    background-color: #ffffff00;
+}
+
+.mat-tree,
+.mat-mdc-table {
+    background-color: #55555500;
+    box-shadow: none;
+}
+
+th {
+    border: none;
+    background-color: rgb(246, 246, 246) !important;
+}
+
+.data-content {
+    font-size: 13px;
+    font-family: 'Poppins';
+    line-height: 20px;
+}
+
+.mat-mdc-row:hover {
+    border-color: #88888800
 }
 
 //custom scroll

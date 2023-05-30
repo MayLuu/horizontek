@@ -1,0 +1,62 @@
+<div class="printer-warehouse-wrapper">
+  <app-header></app-header>
+  <app-breadcrum [content]="'Printer Warehouse'"></app-breadcrum>
+  <div class="printer-wrapper">
+    <div class="running-wrapper">
+      <div class="wrapper-title">
+        <div class="title">Running Printer</div>
+        <div class="search-wrapper">
+          <app-search></app-search>
+        </div>
+      </div>
+      <div class="running-list">
+        <div class="p-item" *ngFor="let p of printers">
+          <div class="center">
+            <div class="p-img">
+              <img src="../../../assets/images/printer.png" alt="" />
+            </div>
+            <div class="title">{{ p.name }}</div>
+            <div class="left-time">4hours left to complete</div>
+          </div>
+          <div class="progress">
+            <div class="bar">
+              <mat-progress-bar
+                mode="determinate"
+                value="value$ | async"
+              ></mat-progress-bar>
+            </div>
+            <div class="percent">{{ value$ | async }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="available-wrapper">
+      <div class="wrapper-title">
+        <div class="title">Available Printer</div>
+        <div class="search-wrapper">
+          <app-search></app-search>
+        </div>
+      </div>
+      <div class="running-list">
+        <div class="p-item" *ngFor="let p of printers">
+          <div class="center">
+            <div class="p-img">
+              <img src="../../../assets/images/printer.png" alt="" />
+            </div>
+            <div class="title">{{ p.name }}</div>
+            <div class="left-time">4hours left to complete</div>
+          </div>
+          <div class="progress">
+            <div class="bar">
+              <mat-progress-bar
+                mode="determinate"
+                value="value$ | async"
+              ></mat-progress-bar>
+            </div>
+            <div class="percent">{{ value$ | async }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

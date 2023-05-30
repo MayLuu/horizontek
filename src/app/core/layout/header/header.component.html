@@ -6,7 +6,7 @@
     <div class="app-name-wrapper">Horizontek</div>
   </div>
   <div class="right-side-wrapper">
-    <div class="not-authen-wrapper">
+    <div class="not-authen-wrapper" *ngIf="user == null">
       <div class="button">
         <button class="btn btn-secondary" routerLink="/register">
           Register
@@ -18,12 +18,12 @@
         </button>
       </div>
     </div>
-    <div class="not-authen-wrapper">
+    <div class="not-authen-wrapper" *ngIf="user != null">
       <div class="button">
         <button class="btn btn-primary" (click)="logout()">Logout</button>
       </div>
       <div class="button info">
-        <h3>Hi, <strong></strong></h3>
+        <h3>Hi, {{ user && user.username }}<strong></strong></h3>
       </div>
     </div>
   </div>

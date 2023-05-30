@@ -94,6 +94,10 @@ form {
     }
 }
 
+input:disabled {
+    background-color: #f8a44400;
+}
+
 .btn {
     margin: 1em auto;
     width: 100%;
@@ -116,4 +120,8 @@ form {
 .yellow-btn {
     background-color: #F8A544;
     color: white !important;
+}
+
+button:disabled {
+    background-color: hsl(0, 0%, 62%);
 }
