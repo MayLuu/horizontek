@@ -1,0 +1,26 @@
+.dialog-wrapper {
+    padding: 0.5rem 4rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+input {
+    height: 38px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: center;
+
+
+    color: rgba(0, 0, 0, 0.5);
+}
+
+input:focus {
+    outline: none;
+}

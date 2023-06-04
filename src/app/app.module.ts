@@ -19,7 +19,6 @@ import { BreadcrumComponent } from './core/layout/breadcrum/breadcrum.component'
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SearchComponent } from './core/layout/search/search.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InventoryPrintingPageComponent } from './features/inventory-printing-page/inventory-printing-page.component';
@@ -37,9 +36,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { PrinterWarehouseComponent } from './features/printer-warehouse/printer-warehouse.component';
 import { ErrorComponent } from './features/error/error.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CreateDialogComponent } from './core/layout/create-dialog/create-dialog.component';
+import { GcodePreviewComponent } from './core/layout/gcode-preview/gcode-preview.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,10 @@ import { ErrorComponent } from './features/error/error.component';
     InventoryPrintingPageComponent,
     FileExplorerComponent,
     PrinterWarehouseComponent,
-    ErrorComponent
+    ErrorComponent,
+    CreateDialogComponent,
+    GcodePreviewComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -65,6 +71,7 @@ import { ErrorComponent } from './features/error/error.component';
     HttpClientModule,
     MatFormFieldModule,
     MatTooltipModule,
+    BrowserAnimationsModule,
     //form
     FormsModule,
     ReactiveFormsModule,
@@ -79,7 +86,9 @@ import { ErrorComponent } from './features/error/error.component';
     MatDialogModule,
     MatTreeModule,
     MatSelectModule,
-    MatRadioModule
+    MatRadioModule,
+    MatPaginatorModule
+
 
 
 

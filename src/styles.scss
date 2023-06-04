@@ -50,3 +50,20 @@ button {
 input:focus {
     outline: none;
 }
+
+.mat-simple-snackbar {
+    font-size: 1.2em;
+    color: white;
+}
+
+.snackbar-error {
+    background-color: red;
+}
+
+.snackbar-success {
+    background-color: rgb(106, 224, 106);
+}
+
+.snackbar-info {
+    background-color: rgb(99, 99, 241);
+}

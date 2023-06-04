@@ -4,6 +4,8 @@ import { Observable, map } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorHandlerService, HandleError } from './http-error-handler.service';
 import { Project } from '../models/project.model';
+import { environment } from 'environment';
+
 const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -44,6 +46,11 @@ export class InventoryService {
     uploadFile(formData: any): Observable<any> {
         console.log(this.http.post<any>(this.filetUrl, formData))
         return this.http.post<any>(this.filetUrl, formData)
+
+    }
+
+    createFolder(body: any): Observable<any> {
+        return this.http.post<any>(environment.apiUrl + '/folders', body)
 
     }
 

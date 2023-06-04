@@ -23,6 +23,9 @@ export class InventoryPrintingPageComponent {
   url!: any;
   responseData!: Blob;
 
+  objLink!: string;
+  intendTime: string = "0";
+
   printingForm: any;
 
   printersList: Printer[] = [];
@@ -32,7 +35,6 @@ export class InventoryPrintingPageComponent {
 
   progress$!: Observable<any>;
 
-  isSliced: boolean = false;
   isIntended: boolean = false;
 
 
@@ -50,9 +52,11 @@ export class InventoryPrintingPageComponent {
     this.fileName = state.fileName;
 
     this.printingForm = new FormGroup({
+
       printer: new FormControl(),
       quality: new FormControl(),
       material: new FormControl(),
+
     })
 
   }
@@ -79,15 +83,14 @@ export class InventoryPrintingPageComponent {
   //get file content by call api
   loadObjFileFromAPI() {
     let link: string = environment.api + this.fileName + '-' + this.fileId + '.obj';
+    this.objLink = link
     console.log('link ', link)
-    var start = new Date().getTime();
     //create new file
-    while (document.querySelectorAll('canvas').length != 0) {
-      document.getElementsByTagName('canvas')[0].remove();
-    }
+    // while (document.querySelectorAll('canvas').length != 0) {
+    //   document.getElementsByTagName('canvas')[0].remove();
+    // }
     var scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
-    // var mtlLoader = new MaterialLoader();
     var camera = new THREE.PerspectiveCamera(50, window.innerWidth / 1.35 / window.innerHeight / 1.35, 1, 1000);
     camera.position.z = 420;
     var renderer = new THREE.WebGLRenderer();
@@ -96,10 +99,8 @@ export class InventoryPrintingPageComponent {
 
     //threejs frame
     const container = document.getElementsByClassName('myObject')[0];
-
-
-    container.appendChild(renderer.domElement);
-    // document.body.appendChild(renderer.domElement);
+    console.log(container)
+    container?.appendChild(renderer.domElement);
 
     var can = document.querySelector('canvas');
     can!.style.position = 'relative';
@@ -129,33 +130,23 @@ export class InventoryPrintingPageComponent {
     animate();
 
   }
-  openGocdePreview() {
-    this.isSliced = true
+  switch() {
+    this.isIntended = !this.isIntended
   }
 
   //get data for custom printer: all printers, time estimated
   onSubmit() {
-    // this.printingForm = new FormData()
-
-    // this.printingForm.append('printerId', "00-1B-63-84-45-E6");
-    // this.printingForm.append('fileId', this.fileId);
-    // this.printingForm.append('status', 'PENDING')
-
-    // console.log('form', this.printingForm)
-    // console.log(this.printingService.print(this.printingForm).subscribe(data =>
-    //   console.log('aloooo', data)))
-    //   ;
-    console.log('onsub')
-    console.log(this.printingForm.value);
-
     this.print()
   }
   print() {
+
+    //open confirm dialog
+
     let body = new FormData()
 
     body.append('printerId', "00-1B-63-84-45-E6");
     body.append('fileId', "ff474839-f61e-11ed-8819-0242c0a8c002");
-    body.append('status', 'PENDING')
+    body.append('status', 'PENDING');
 
     console.log(this.printingService.print(body).subscribe(
       res => {
@@ -174,7 +165,33 @@ export class InventoryPrintingPageComponent {
 
 
   intend() {
-    this.isIntended = true;
+
+    //get estimated time, gcode link
+    let body = new FormData()
+
+    body.append('printerID', "00-1B-63-84-45-E6");
+    body.append('density', "25%");
+    body.append('quality', this.printingForm.quality);
+    body.append('model', this.objLink);
+    body.append('filament', 'PLA')
+
+    console.log(this.printingService.getIntentTime(body).subscribe(
+      res => {
+        console.log(res);
+        this.intendTime = res.TIME
+      },
+      err => { console.log(err) },
+      () => {
+        // while (document.querySelectorAll('canvas').length != 0) {
+        //   document.getElementsByTagName('canvas')[0].remove();
+        // }
+        this.isIntended = true;
+
+        //snackbar open
+
+      }
+    ))
+
   }
 
 

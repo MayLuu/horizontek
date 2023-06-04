@@ -10,12 +10,13 @@ import { InventoryPrintingPageComponent } from "./features/inventory-printing-pa
 import { AuthGuard } from "./core/services/auth-guard.service";
 import { PrinterWarehouseComponent } from "./features/printer-warehouse/printer-warehouse.component";
 import { ErrorComponent } from "./features/error/error.component";
+import { GcodePreviewComponent } from "./core/layout/gcode-preview/gcode-preview.component";
 
 
 const routes: Routes = [
   {
     path: "",
-    component: HomePageComponent,
+    component: InventoryPageComponent,
 
   },
 
@@ -45,6 +46,10 @@ const routes: Routes = [
   {
     path: "warehouse",
     component: PrinterWarehouseComponent,
+  },
+  {
+    path: "test",
+    component: GcodePreviewComponent,
   },
   {
     path: "error",

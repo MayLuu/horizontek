@@ -1,17 +1,18 @@
-.style-node {
-    background-color: #faebd7;
-    width: 14em;
-    border-radius: 8px;
-}
+// .style-node {
+//     background-color: #faebd7;
+//     width: 14em;
+//     border-radius: 8px;
+// }
 
-mat-tree-node:active {
+
+.active-node {
     background-color: antiquewhite;
     width: 14em;
     border-radius: 8px;
 }
 
 .inventory-page-body {
-    padding: 1.5rem 0;
+    padding: 1.5rem 1rem;
     font-family: 'Poppins', sans-serif;
 
 }
@@ -46,7 +47,8 @@ mat-tree-node:active {
 
 
 .project-list,
-.project-content-wrapper {
+.wrapper {
+    height: 100%;
     margin: 1rem 0;
     overflow: scroll;
     overflow-x: hidden;
@@ -257,4 +259,32 @@ th {
 
 .demo-row-is-clicked {
     font-weight: bold;
+}
+
+.center-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    position: absolute;
+    margin: 0 auto;
+    bottom: 0;
+    width: 10rem;
+    height: 2.4rem;
+    border-radius: 50rem;
+    font-weight: bold;
+    color: #F8A544;
+    border: 2px solid #F8A544;
+    background-color: rgba(246, 246, 246, 0.4);
+    font-family: 'Poppins';
+    font-style: normal;
+    font-size: 13px;
+    line-height: 20px;
+    letter-spacing: 0.07rem;
+}
+
+.btn:hover {
+    background-color: #F8A544;
+    color: black;
 }

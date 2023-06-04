@@ -11,6 +11,7 @@
             <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
               <!-- This is the tree node template for leaf nodes -->
               <mat-tree-node
+                id="{{ node.n.id }}"
                 (click)="getProjectContent(node.n)"
                 *matTreeNodeDef="let node"
                 matTreeNodePadding
@@ -27,6 +28,7 @@
               </mat-tree-node>
               <!-- This is the tree node template for expandable nodes -->
               <mat-tree-node
+                id="{{ node.n.id }}"
                 *matTreeNodeDef="let node; when: hasChild"
                 matTreeNodePadding
                 (click)="getProjectContent(node.n)"
@@ -54,6 +56,12 @@
               </mat-tree-node>
             </mat-tree>
           </div>
+          <div class="center-btn">
+            <button (click)="openCreateFolderDialog()" class="btn">
+              Create folder
+            </button>
+            New folder:
+          </div>
 
           <!-- TREE -->
         </div>
@@ -61,87 +69,101 @@
       <mat-grid-tile [colspan]="4" [rowspan]="4"
         ><div class="project-content-wrapper">
           <h2 class="title">
-            <strong> {{ currentProjectNode }}</strong
-            >Content
+            Content
             <div class="progress-bar" *ngIf="loaderService.isLoading | async">
               <mat-progress-bar mode="determinate"></mat-progress-bar>
             </div>
           </h2>
 
-          <div><app-search></app-search></div>
+          <div>
+            <app-search (searchEvent)="getSearchVal($event)"></app-search>
+          </div>
           <!-- loader goes here -->
-          Total {{ tableData && tableData.length }} file
-          <mat-grid-list cols="9" rowHeight="1:0.6" class="data-wrapper">
-            <!-- for upload new file -->
-            <mat-grid-tile class="upload-item" colspan="9">
-              <div class="upload-wrapper">
-                <form
-                  [formGroup]="uploadForm"
-                  (change)="onSubmit(currentProjectNode)"
-                >
-                  <input
-                    name="file"
-                    id="file"
-                    type="file"
-                    (change)="handleFileInput($event)"
-                    accept=".obj"
-                    formControlName="file"
-                    ngModel
-                    hidden
+          <!-- Total {{ tableDataSource }} file -->
+          <div class="wrapper">
+            <mat-grid-list cols="9" rowHeight="1:0.6" class="data-wrapper">
+              <!-- for upload new file -->
+              <mat-grid-tile class="upload-item" colspan="9">
+                <div class="upload-wrapper">
+                  <form
+                    [formGroup]="uploadForm"
+                    (change)="onSubmit(currentProjectNode)"
+                  >
+                    <input
+                      name="file"
+                      id="file"
+                      type="file"
+                      (change)="handleFileInput($event)"
+                      accept=".obj"
+                      formControlName="file"
+                      ngModel
+                      hidden
+                    />
+                  </form>
+
+                  <img
+                    onclick="document.getElementById('file').click();"
+                    class="upload-button"
+                    src="../../../assets/images/upload-button.png"
+                    alt=""
                   />
-                </form>
 
-                <img
-                  onclick="document.getElementById('file').click();"
-                  class="upload-button"
-                  src="../../../assets/images/upload-button.png"
-                  alt=""
-                />
-
-                <div class="name data-content">
-                  <div>Upload new file</div>
-                  <div class="sub">(maxsize 20MB)</div>
-                </div>
-              </div></mat-grid-tile
-            >
-          </mat-grid-list>
-          <table
-            *ngIf="tableData && tableData.length > 0"
-            mat-table
-            [dataSource]="tableData && tableData"
-            class="mat-elevation-z8 demo-table"
-          >
-            <ng-container
-              *ngFor="let column of columns"
-              [matColumnDef]="column.columnDef"
-            >
-              <th mat-header-cell *matHeaderCellDef class="data-content">
-                <strong>{{ column.header }}</strong>
-              </th>
-
-              <div *ngIf="column.columnDef == 'image'; else elseBlock">
-                <td
-                  class="data-content"
-                  mat-cell
-                  *matCellDef="let row"
-                  (click)="getFilePreview(row)"
-                >
-                  <img src="../../../assets/images/model-preview.png" alt="" />
-                </td>
-              </div>
-              <ng-template #elseBlock>
-                <td mat-cell *matCellDef="let row" class="data-content">
-                  {{ column.cell(row) }}
-                </td></ng-template
+                  <div class="name data-content">
+                    <div>Upload new file</div>
+                    <div class="sub">(maxsize 20MB)</div>
+                  </div>
+                </div></mat-grid-tile
               >
-              <!-- <td mat-cell *matCellDef="let row">
-      {{ column.cell(row) }}
-    </td> -->
-            </ng-container>
+            </mat-grid-list>
+            <mat-paginator
+              #paginator
+              [length]="resultFiles.length"
+              [pageSizeOptions]="[5, 10]"
+              aria-label="select page"
+            >
+            </mat-paginator>
+            <table
+              *ngIf="resultFiles && resultFiles.length > 0"
+              mat-table
+              [dataSource]="tableDataSource"
+              class="mat-elevation-z8 demo-table"
+            >
+              <ng-container
+                *ngFor="let column of columns"
+                [matColumnDef]="column.columnDef"
+              >
+                <th mat-header-cell *matHeaderCellDef class="data-content">
+                  <strong>{{ column.header }}</strong>
+                </th>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-          </table>
+                <div *ngIf="column.columnDef == 'image'; else elseBlock">
+                  <td
+                    class="data-content"
+                    mat-cell
+                    *matCellDef="let row"
+                    (click)="getFilePreview(row)"
+                  >
+                    <img
+                      src="../../../assets/images/model-preview.png"
+                      alt=""
+                    />
+                  </td>
+                </div>
+
+                <ng-template #elseBlock>
+                  <td mat-cell *matCellDef="let row" class="data-content">
+                    {{ column.cell(row) }}
+                  </td></ng-template
+                >
+                <!-- <td mat-cell *matCellDef="let row">
+        {{ column.cell(row) }}
+      </td> -->
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
         </div>
       </mat-grid-tile>
     </mat-grid-list>

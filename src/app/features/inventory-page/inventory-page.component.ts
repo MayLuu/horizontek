@@ -1,30 +1,33 @@
 import { Project } from './../../core/models/project.model';
 import { File } from './../../core/models/file.model';
-import { Component, ElementRef, EventEmitter, Renderer2 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
-import { BehaviorSubject, Observable, pipe, tap } from 'rxjs';
 import { Folder } from 'src/app/core/models/folder.model';
-import { InventoryService, ResponseBody } from 'src/app/core/services/inventory.service';
+import { InventoryService } from 'src/app/core/services/inventory.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { FileElement } from 'src/app/core/models/element.model';
 import { FileService } from 'src/app/core/services/file.service';
 
 
 //for tree
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateDialogComponent } from 'src/app/core/layout/create-dialog/create-dialog.component';
+//for paginator
+import { ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { merge, of, startWith, switchMap } from 'rxjs';
 
 interface ProjectNode {
   id: string;
   name: string;
   files?: File[];
-  children?: Folder[]
+  children?: Folder[];
+  parentId?: any;
+  projectId?: any;
 }
 
 /** Flat node with expandable and level information */
@@ -125,21 +128,25 @@ export class InventoryPageComponent {
     //   cell: (element: PeriodicElement) => `${element.application}`,
     // },
   ];
-  tableData: PeriodicElement[] = [];
+  resultFiles: PeriodicElement[] = [];
+  tableDataSource!: MatTableDataSource<PeriodicElement>;
 
   displayedColumns = this.columns.map(c => c.columnDef);
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  //PAGINATOR
+  @ViewChild('paginator', { static: true }) paginator!: MatPaginator
   constructor(private inventoryService: InventoryService,
     private element: ElementRef,
     private renderer: Renderer2,
     private _fb: FormBuilder,
     public loaderService: LoaderService,
     private router: Router,
-    public fileService: FileService) {
-    //tree
-    // this.dataSource.data = TREE_DATA;
-    // this.dataSource.data = this.currentProjectNode;
+    public fileService: FileService,
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog) {
+
 
   }
 
@@ -150,28 +157,21 @@ export class InventoryPageComponent {
   ngOnInit() {
     this.getAllProjects();
 
-
     this.uploadForm = this._fb.group({
       file: [''],
       projectId: [''],
       folderId: ['']
     })
-    //for file explorer
-    const folderA = this.fileService.add({ name: 'Folder A', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder B', isFolder: true, parent: 'root' });
-    this.fileService.add({ name: 'Folder C', isFolder: true, parent: folderA.id as string });
-    this.fileService.add({ name: 'File A', isFolder: false, parent: 'root' });
-    this.fileService.add({ name: 'File B', isFolder: false, parent: 'root' });
 
-    this.updateFileElementQuery();
+
 
 
   }
   getAllProjects(): void {
     this.inventoryService.getAllProjects().subscribe(data => {
       this.projects = data.data;
-      console.log(data.data[0]);
-      console.log(typeof this.currentProject)
+
+
       this.currentProject = {
         id: data.data[0].id,
         name: data.data[0].name,
@@ -191,16 +191,33 @@ export class InventoryPageComponent {
           this.dataSource.data = this.currentProjectNode
 
           this.getProjectContent(this.currentProjectNode as any)
+
+          let defaultProject = this.currentProjectNode[0];
+          this.getProjectContent({
+            id: defaultProject.id,
+            name: defaultProject.name,
+            files: defaultProject.files,
+            children: defaultProject.children
+          })
+
+
         })
 
       }
 
       )
 
-      //TREE
-      //first : clone {name, folder: null} to this.currentProjectNode use myArr.map( val => myCopy.push( Object.assign({}, val.name, this.currentProject.folder))
-      //second : in getProjectContent func , pass folder property of first project to this.currentProjectNode[0].children
-      console.log(this.currentProjectNode)
+
+
+
+
+
+
+
+
+
+
+
 
     });
 
@@ -208,23 +225,23 @@ export class InventoryPageComponent {
   }
 
   getProjectContent(node: ProjectNode, id?: string): void {
-    console.log('ID', node.id);
+    document.getElementsByClassName('active-node')[0]?.classList.remove('active-node')
+
+    document.getElementById(node.id)?.classList.add('active-node')
 
     let active = document.getElementById(node.id) as HTMLInputElement | null;
-    console.log(active)
     if (active != null) {
       active.style.backgroundColor = '#FAEBD7'
     }
-    console.log(node)
 
     this.currentNode = node;
     this.currentProject = node
     this.currentChildrens = node.files as File[];
-    this.tableData = []
-    node.files && node.files.map(i => this.tableData.push(Object.assign({},
+    this.resultFiles = []
+    node.files && node.files.map((i, index) => this.resultFiles.push(Object.assign({},
       {
         id: i.id,
-        position: Date.now(),
+        position: index + 1,
         name: i.name,
         img: "alo",
         size: "2MB",
@@ -234,7 +251,10 @@ export class InventoryPageComponent {
     ))
     )
 
-    console.log('table', this.tableData)
+    this.tableDataSource = new MatTableDataSource(this.resultFiles)
+    console.log('table:', this.resultFiles)
+
+    this.tableDataSource.paginator = this.paginator
 
 
 
@@ -305,7 +325,7 @@ export class InventoryPageComponent {
       if (res.code == 200) {
         console.log(res.data)
         this.currentProject.files?.push(res.data[0])
-        this.tableData.push(
+        this.resultFiles.push(
           {
             id: res.data[0].id,
             position: Date.now(),
@@ -352,72 +372,65 @@ export class InventoryPageComponent {
 
   }
 
+  openCreateFolderDialog(): void {
+    let newFolder!: string;
+    let dialogRef = this.dialog.open(CreateDialogComponent, {
+      width: 'fit-content%',
+      data: newFolder,
+      autoFocus: true
 
-  //file exploreer
-  public fileElements!: Observable<any>;
-
-
-
-  currentRoot!: FileElement;
-  currentPath!: string;
-  canNavigateUp = false as any;
-
-
-
-  addFolder(folder: { name: string }) {
-    this.fileService.add({ isFolder: true, name: folder.name, parent: this.currentRoot ? this.currentRoot.id as string : 'root' });
-    this.updateFileElementQuery();
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.createFolder(result)
+    })
   }
 
-  removeElement(element: FileElement) {
-    this.fileService.delete(element.id as string);
-    this.updateFileElementQuery();
-  }
+  createFolder(result: string) {
 
-  navigateToFolder(element: FileElement) {
-    this.currentRoot = element;
-    this.updateFileElementQuery();
-    this.currentPath = this.pushToPath(this.currentPath, element.name);
-    this.canNavigateUp = true;
-  }
+    console.log('current', this.currentNode);
+    console.log('projectId:', this.currentNode.projectId == undefined)
+    console.log('parentId:', this.currentNode.parentId == null || this.currentNode.parentId == undefined)
 
-  navigateUp() {
-    if (this.currentRoot && this.currentRoot.parent === 'root') {
-      this.currentRoot = null as any;
-      this.canNavigateUp = false;
-      this.updateFileElementQuery();
+    interface ReqBody {
+      name: string,
+      createdAt: string,
+      parentId: any,
+      projectId: any
+    };
+    let body: ReqBody = {
+      name: result,
+      createdAt: new Date().toISOString(),
+      parentId: null,
+      projectId: null
+
+    };
+
+
+    let firstCond = this.currentNode.projectId == undefined;
+    let secondCond = this.currentNode.parentId == null || this.currentNode.parentId == undefined
+    if (firstCond && secondCond) {
+
+      body.projectId = this.currentNode.id
     } else {
-      this.currentRoot = this.fileService.get(this.currentRoot.parent);
-      this.updateFileElementQuery();
+      body.parentId = this.currentNode.id
     }
-    this.currentPath = this.popFromPath(this.currentPath);
+
+    console.log('body', body)
+    this.inventoryService.createFolder(body).subscribe(
+      res => console.log(res),
+      err => console.log(err),
+      () => {
+      }
+    )
+
+  }
+  AfterViewInit() {
+    this.tableDataSource.paginator = this.paginator
   }
 
-  moveElement(event: { element: FileElement; moveTo: FileElement }) {
-    this.fileService.update(event.element.id as string, { parent: event.moveTo.id });
-    this.updateFileElementQuery();
+  getSearchVal(val: string) {
+    this.tableDataSource.filter = val.trim().toLowerCase()
+    console.log(this.tableDataSource.filter)
   }
 
-  renameElement(element: FileElement) {
-    this.fileService.update(element.id as string, { name: element.name });
-    this.updateFileElementQuery();
-  }
-
-  updateFileElementQuery() {
-    this.fileElements = this.fileService.queryInFolder(this.currentRoot ? this.currentRoot.id as string : 'root');
-  }
-
-  pushToPath(path: string, folderName: string) {
-    let p = path ? path : '';
-    p += `${folderName}/`;
-    return p;
-  }
-
-  popFromPath(path: string) {
-    let p = path ? path : '';
-    let split = p.split('/');
-    split.splice(split.length - 2, 1);
-    p = split.join('/');
-    return p;
-  }
 }
