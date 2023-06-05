@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { environment } from 'environment';
 import { Observable } from 'rxjs';
 import { Printer } from 'src/app/core/models/printer.model';
+import { LoaderService } from 'src/app/core/services/loader.service';
 import { PrinterService } from 'src/app/core/services/printer.service';
 import { PrintingService } from 'src/app/core/services/printing.service';
 import * as THREE from 'three';
@@ -24,7 +25,7 @@ export class InventoryPrintingPageComponent {
   responseData!: Blob;
 
   objLink!: string;
-  intendTime: string = "0";
+  intendTime: string = "0 sec";
 
   printingForm: any;
 
@@ -42,7 +43,8 @@ export class InventoryPrintingPageComponent {
     private http: HttpClient,
     private sanitizer: DomSanitizer,
     private printingService: PrintingService,
-    private printerService: PrinterService) {
+    private printerService: PrinterService,
+    public loaderService: LoaderService) {
 
     const navigation = this.router.getCurrentNavigation();
 
@@ -63,14 +65,16 @@ export class InventoryPrintingPageComponent {
   OnInit() {
 
 
-    this.progress$ = this.printerService.progress$
-    console.log(this.printerService.getPrinterProgress())
+    this.loadObjFileFromAPI();
 
 
   }
-  ngAfterContentInit() {
+  ngAfterViewInit() {
     this.loadObjFileFromAPI();
-    // console.log(this.printerService.OnInit())
+
+  }
+  ngAfterContentInit() {
+    // this.loadObjFileFromAPI();
     this.progress$ = this.printerService.progress$
 
     console.log(this.printerService.getAllPrinters().subscribe(data => {
@@ -99,10 +103,9 @@ export class InventoryPrintingPageComponent {
 
     //threejs frame
     const container = document.getElementsByClassName('myObject')[0];
-    console.log(container)
     container?.appendChild(renderer.domElement);
 
-    var can = document.querySelector('canvas');
+    var can = document.querySelectorAll('canvas')[0];
     can!.style.position = 'relative';
 
 
@@ -178,13 +181,17 @@ export class InventoryPrintingPageComponent {
     console.log(this.printingService.getIntentTime(body).subscribe(
       res => {
         console.log(res);
-        this.intendTime = res.TIME
+        //
+        if (res.TIME > 3600) {
+          this.intendTime = (res.TIME / 3600).toFixed(1) + ' hours'
+        }
+        // this.intendTime = res.TIME;
+
       },
       err => { console.log(err) },
       () => {
-        // while (document.querySelectorAll('canvas').length != 0) {
-        //   document.getElementsByTagName('canvas')[0].remove();
-        // }
+
+
         this.isIntended = true;
 
         //snackbar open

@@ -16,7 +16,7 @@ import { GcodePreviewComponent } from "./core/layout/gcode-preview/gcode-preview
 const routes: Routes = [
   {
     path: "",
-    component: InventoryPageComponent,
+    component: HomePageComponent,
 
   },
 

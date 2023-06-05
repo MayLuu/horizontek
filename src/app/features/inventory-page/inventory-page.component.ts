@@ -121,13 +121,13 @@ export class InventoryPageComponent {
     {
       columnDef: 'application',
       header: 'Application',
+      cell: (element: PeriodicElement) => `${element.application}`,
+    },
+    {
+      columnDef: 'action',
+      header: '',
       cell: (element: PeriodicElement) => `${element}`,
     },
-    // {
-    //   columnDef: 'action',
-    //   header: '',
-    //   cell: (element: PeriodicElement) => ``,
-    // },
   ];
   resultFiles: PeriodicElement[] = [];
   tableDataSource!: MatTableDataSource<PeriodicElement>;
@@ -229,14 +229,12 @@ export class InventoryPageComponent {
   }
 
   getProjectContent(node: ProjectNode, id?: string): void {
+    // const ele = document.getElementsByClassName('active-node')[0] as HTMLElement
+    // ele.style.background = "#FFFFFF"
     document.getElementsByClassName('active-node')[0]?.classList.remove('active-node')
-
     document.getElementById(node.id)?.classList.add('active-node')
 
-    let active = document.getElementById(node.id) as HTMLInputElement | null;
-    if (active != null) {
-      active.style.backgroundColor = '#FAEBD7'
-    }
+
 
     this.currentNode = node;
     this.currentProject = node
@@ -491,5 +489,6 @@ export class InventoryPageComponent {
 
     // })
   }
+
 
 }

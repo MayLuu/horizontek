@@ -10,19 +10,19 @@
         </div>
       </div>
       <div class="running-list">
-        <div class="p-item" *ngFor="let p of printers">
+        <div class="p-item">
           <div class="center">
             <div class="p-img">
               <img src="../../../assets/images/printer.png" alt="" />
             </div>
-            <div class="title">{{ p.name }}</div>
+            <div class="title">{{ runningPrinter.name }}</div>
             <div class="left-time">4hours left to complete</div>
           </div>
           <div class="progress">
             <div class="bar">
               <mat-progress-bar
                 mode="determinate"
-                value="value$ | async"
+                [value]="value$ | async"
               ></mat-progress-bar>
             </div>
             <div class="percent">{{ value$ | async }}%</div>
@@ -37,7 +37,7 @@
           <app-search></app-search>
         </div>
       </div>
-      <div class="running-list">
+      <div class="running-list available">
         <div class="p-item" *ngFor="let p of printers">
           <div class="center">
             <div class="p-img">
@@ -45,15 +45,6 @@
             </div>
             <div class="title">{{ p.name }}</div>
             <div class="left-time">4hours left to complete</div>
-          </div>
-          <div class="progress">
-            <div class="bar">
-              <mat-progress-bar
-                mode="determinate"
-                value="value$ | async"
-              ></mat-progress-bar>
-            </div>
-            <div class="percent">{{ value$ | async }}%</div>
           </div>
         </div>
       </div>

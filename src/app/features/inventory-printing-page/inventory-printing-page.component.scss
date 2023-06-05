@@ -4,10 +4,11 @@
     margin: 5em 0;
 }
 
+.obj-container {
+    display: none;
+}
 
-
-
-.canvas-container {
+.gcode- .canvas-container {
     border-radius: 8px;
     box-shadow: 1px 2px 10px 2px #e0e0e09b;
 }
@@ -124,4 +125,12 @@ input:disabled {
 
 button:disabled {
     background-color: hsl(0, 0%, 62%);
+}
+
+
+.progress-bar {
+    margin: 0 auto;
+    width: 30%;
+
+
 }

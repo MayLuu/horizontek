@@ -60,7 +60,6 @@
             <button (click)="openCreateFolderDialog()" class="btn">
               Create folder
             </button>
-            New folder:
           </div>
 
           <!-- TREE -->
@@ -71,7 +70,7 @@
           <h2 class="title">
             Content
             <div class="progress-bar" *ngIf="loaderService.isLoading | async">
-              <mat-progress-bar mode="determinate"></mat-progress-bar>
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
           </h2>
 
@@ -115,13 +114,7 @@
                 </div></mat-grid-tile
               >
             </mat-grid-list>
-            <mat-paginator
-              #paginator
-              [length]="resultFiles.length"
-              [pageSizeOptions]="[5, 10]"
-              aria-label="select page"
-            >
-            </mat-paginator>
+
             <table
               *ngIf="resultFiles && resultFiles.length > 0"
               mat-table
@@ -149,13 +142,8 @@
                     />
                   </td>
                 </div>
-                <div
-                  class="app"
-                  *ngIf="column.columnDef == 'application'; else elseBlock"
-                >
-                  <td class="data-content" mat-cell *matCellDef="let row">
-                    Application
-                    <!-- {{ column.cell(row) }} -->
+                <div *ngIf="column.columnDef == 'action'; else elseBlock">
+                  <td class="app" mat-cell *matCellDef="let row">
                     <button
                       mat-icon-button
                       [matMenuTriggerFor]="menu"
@@ -184,14 +172,18 @@
                     {{ column.cell(row) }}
                   </td></ng-template
                 >
-                <!-- <td mat-cell *matCellDef="let row">
-        {{ column.cell(row) }}
-      </td> -->
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
+            <mat-paginator
+              #paginator
+              [length]="resultFiles.length"
+              [pageSizeOptions]="[5, 10]"
+              aria-label="select page"
+            >
+            </mat-paginator>
           </div>
         </div>
       </mat-grid-tile>
