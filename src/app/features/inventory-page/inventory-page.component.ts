@@ -20,7 +20,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { merge, of, startWith, switchMap } from 'rxjs';
-
+import { EditDialogComponent } from 'src/app/core/layout/edit-dialog/edit-dialog.component';
 interface ProjectNode {
   id: string;
   name: string;
@@ -45,6 +45,7 @@ export interface PeriodicElement {
   img: string;
   size: string;
   application: string;
+  url: string;
 }
 @Component({
   selector: 'app-inventory-page',
@@ -120,12 +121,12 @@ export class InventoryPageComponent {
     {
       columnDef: 'application',
       header: 'Application',
-      cell: (element: PeriodicElement) => `${element.application}`,
+      cell: (element: PeriodicElement) => `${element}`,
     },
     // {
     //   columnDef: 'action',
     //   header: '',
-    //   cell: (element: PeriodicElement) => `${element.application}`,
+    //   cell: (element: PeriodicElement) => ``,
     // },
   ];
   resultFiles: PeriodicElement[] = [];
@@ -162,6 +163,9 @@ export class InventoryPageComponent {
       projectId: [''],
       folderId: ['']
     })
+
+
+
 
 
 
@@ -238,14 +242,16 @@ export class InventoryPageComponent {
     this.currentProject = node
     this.currentChildrens = node.files as File[];
     this.resultFiles = []
+    console.log('node', node.files)
     node.files && node.files.map((i, index) => this.resultFiles.push(Object.assign({},
       {
         id: i.id,
         position: index + 1,
         name: i.name,
         img: "alo",
-        size: "2MB",
+        size: i.size + " B",
         application: "Inventory",
+        url: i.url
       }
 
     ))
@@ -333,6 +339,7 @@ export class InventoryPageComponent {
             img: "alo",
             size: "2MB",
             application: "Inventory",
+            url: res.data[0].url
           }
         )
       }
@@ -431,6 +438,58 @@ export class InventoryPageComponent {
   getSearchVal(val: string) {
     this.tableDataSource.filter = val.trim().toLowerCase()
     console.log(this.tableDataSource.filter)
+  }
+
+  //CRUD FILES
+  openEditFileDialog(ele: any): void {
+    let newFolder = ele.name;
+    let dialogRef = this.dialog.open(EditDialogComponent, {
+      width: 'fit-content%',
+      data: newFolder,
+      autoFocus: true,
+
+
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.updateFile(ele.id, result)
+    })
+  }
+
+  updateFile(id: string, result: string) {
+    let condition = this.currentNode.projectId == undefined
+    interface ReqBody {
+      name: string,
+      createdAt: string,
+      projectId: any
+    };
+    let body: ReqBody = {
+      name: result,
+      createdAt: new Date().toISOString(),
+      projectId: condition == true ? this.currentNode.id : this.currentNode.projectId
+
+    };
+    console.log('body', body)
+    this.inventoryService.updateFile(id, body).subscribe(
+      res => console.log(res),
+      err => console.log(err),
+      () => this._snackBar.open("Rename successfully", "Hide")
+    )
+  }
+  deleteFile(ele: any) {
+    this.inventoryService.deleteFile(ele.id).subscribe(
+      res => { },
+      err => this._snackBar.open('Delete failed', 'Hide'),
+      () => this._snackBar.open("Delete successfully", "Hide")
+    )
+  }
+  downloadFile(ele: any) {
+    this.inventoryService.downloadFile(ele.url)
+
+    // this.inventoryService.updateFile("669de7da-0388-11ee-a7a4-0242c0a8d002",{
+    //   "projectId":"ae40c722-e595-11ed-865a-42010ab80002",
+    //   "name":"Test",
+
+    // })
   }
 
 }

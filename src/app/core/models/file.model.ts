@@ -5,4 +5,6 @@ export interface File {
     folderId: string;
     extension: string;
     createdAt: any;
+    size: number;
+    url: string;
 }

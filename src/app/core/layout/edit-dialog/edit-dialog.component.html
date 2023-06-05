@@ -1,0 +1,18 @@
+<div class="dialog-wrapper">
+  <h1 mat-dialog-title>New file name</h1>
+  <div mat-dialog-content>
+    <input
+      type="text"
+      [(ngModel)]="newFolder"
+      placeholder="Enter name"
+      name="newFolder"
+      id=""
+    />
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button [mat-dialog-close]="newFolder" cdkFocusInitial>
+      Create
+    </button>
+  </div>
+</div>

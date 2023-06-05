@@ -43,7 +43,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateDialogComponent } from './core/layout/create-dialog/create-dialog.component';
 import { GcodePreviewComponent } from './core/layout/gcode-preview/gcode-preview.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { EditDialogComponent } from './core/layout/edit-dialog/edit-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,6 +61,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ErrorComponent,
     CreateDialogComponent,
     GcodePreviewComponent,
+    EditDialogComponent
 
   ],
   imports: [

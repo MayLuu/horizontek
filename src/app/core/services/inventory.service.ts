@@ -5,6 +5,9 @@ import { catchError } from 'rxjs/operators';
 import { HttpErrorHandlerService, HandleError } from './http-error-handler.service';
 import { Project } from '../models/project.model';
 import { environment } from 'environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -30,7 +33,9 @@ export class InventoryService {
 
     constructor(
         private http: HttpClient,
-        httpErrorHandler: HttpErrorHandlerService) {
+        httpErrorHandler: HttpErrorHandlerService,
+        private _snackBar: MatSnackBar,
+    ) {
         this.handleError = httpErrorHandler.createHandleError('ProjectsService');
     }
 
@@ -42,60 +47,53 @@ export class InventoryService {
     getProjectById(id: string): Observable<any> {
         return this.http.get<any>(this.projectUrl + "/" + id)
     }
-
-    uploadFile(formData: any): Observable<any> {
-        console.log(this.http.post<any>(this.filetUrl, formData))
-        return this.http.post<any>(this.filetUrl, formData)
-
-    }
-
     createFolder(body: any): Observable<any> {
         return this.http.post<any>(environment.apiUrl + '/folders', body)
 
     }
 
+    uploadFile(formData: any): Observable<any> {
+        return this.http.post<any>(this.filetUrl + "/upload", formData)
 
-    /* GET Projectes whose name contains search term */
-    // searchProjecte(term: string): Observable<Project[]> {
-    //   term = term.trim();
+    }
+    deleteFile(fileId: string): Observable<any> {
+        return this.http.delete<any>(this.filetUrl + "/" + fileId)
 
-    //   // Add safe, URL encoded search parameter if there is a search term
-    //   const options = term ?
-    //     { params: new HttpParams().set('name', term) } : {};
+    }
+    downloadFile(fileLink: string): void {
+        console.log(fileLink)
+        this.http.get(fileLink, { headers: { 'Content-Type': 'model/obj' }, responseType: 'blob' }).subscribe(
+            (res) => {
+                console.log(res)
+                // const file = new Blob([res], { type: 'model/obj' });
+                // const url = window.URL.createObjectURL(res);
+                // window.open(url);
+                // saveAs(res, res?.name + '.obj');
 
-    //   return this.http.get<Project[]>(this.url, options)
-    //     .pipe(
-    //       catchError(this.handleError<Project[]>('searchProjectes', []))
-    //     );
-    // }
+                const a = document.createElement('a')
+                const objectUrl = URL.createObjectURL(res)
+                a.href = objectUrl
+                a.download = 'test.obj';
+                a.click();
+                // URL.revokeObjectURL(objectUrl);
 
-    //////// Save methods //////////
+            },
+            err => {
+                this._snackBar.open('Download failed', "Hide")
+                console.log(err)
+            }
+        )
 
-    /** POST: add a new Project to the database */
-    // addProject(Project: Project): Observable<Project> {
-    //   return this.http.post<Project>(this.url, Project, httpOptions)
-    //     .pipe(
-    //       catchError(this.handleError('addProject', Project))
-    //     );
-    // }
+    }
 
-    /** DELETE: delete the Project from the server */
-    // deleteProject(id: number): Observable<unknown> {
-    //   const url = `${this.url}/${id}`; // DELETE api/Projectes/42
-    //   return this.http.delete(url, httpOptions)
-    //     .pipe(
-    //       catchError(this.handleError('deleteProject'))
-    //     );
-    // }
+    updateFile(fileId: string, body: any): Observable<any> {
+        return this.http.put<ResponseBody>(this.filetUrl + "/" + fileId, body)
 
-    /** PUT: update the Project on the server. Returns the updated Project upon success. */
-    // updateProject(Project: Project): Observable<Project> {
-    //   httpOptions.headers =
-    //     httpOptions.headers.set('Authorization', 'my-new-auth-token');
+    }
 
-    //   return this.http.put<Project>(this.url, Project, httpOptions)
-    //     .pipe(
-    //       catchError(this.handleError('updateProject', Project))
-    //     );
-    // }
+
+
+
+
+
 }
