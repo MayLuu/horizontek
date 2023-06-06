@@ -19,7 +19,7 @@ import { CreateDialogComponent } from 'src/app/core/layout/create-dialog/create-
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { merge, of, startWith, switchMap } from 'rxjs';
+import { delay, merge, of, startWith, switchMap } from 'rxjs';
 import { EditDialogComponent } from 'src/app/core/layout/edit-dialog/edit-dialog.component';
 interface ProjectNode {
   id: string;
@@ -475,14 +475,22 @@ export class InventoryPageComponent {
     this.inventoryService.updateFile(id, body).subscribe(
       res => console.log(res),
       err => console.log(err),
-      () => this._snackBar.open("Rename successfully", "Hide")
+      () => {
+        this._snackBar.open("Rename successfully", "Hide");
+        delay(3000)
+        window.location.reload()
+      }
     )
   }
   deleteFile(ele: any) {
     this.inventoryService.deleteFile(ele.id).subscribe(
       res => { },
       err => this._snackBar.open('Delete failed', 'Hide'),
-      () => this._snackBar.open("Delete successfully", "Hide")
+      () => {
+        this._snackBar.open("Delete successfully", "Hide");
+        delay(3000)
+        window.location.reload()
+      }
     )
   }
   downloadFile(ele: any) {
