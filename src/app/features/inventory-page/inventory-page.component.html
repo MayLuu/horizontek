@@ -166,9 +166,13 @@
                         <mat-icon>delete_outline</mat-icon>
                         <span>Delete</span>
                       </button>
-                      <button mat-menu-item (click)="downloadFile(row)">
+                      <button mat-menu-item>
                         <mat-icon>cloud_download</mat-icon>
-                        <span>Download</span>
+                        <span
+                          ><a [href]="row.url" download="test.obj"
+                            >Link</a
+                          ></span
+                        >
                       </button>
                     </mat-menu>
                   </td>
