@@ -79,6 +79,8 @@ export class InventoryService {
                 // a.click();
                 // URL.revokeObjectURL(objectUrl);
 
+                var blob = new Blob([res], { type: 'application/pdf' });
+
                 saveAs(res, url + '.obj')
 
             },
