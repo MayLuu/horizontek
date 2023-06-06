@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -38,6 +38,7 @@ export class InventoryPrintingPageComponent {
 
   isIntended: boolean = false;
 
+  gcodeUrl!: string;
 
   constructor(private router: Router,
     private http: HttpClient,
@@ -181,7 +182,7 @@ export class InventoryPrintingPageComponent {
     console.log(this.printingService.getIntentTime(body).subscribe(
       res => {
         console.log(res);
-        //
+        this.gcodeUrl = res.data
         if (res.TIME > 3600) {
           this.intendTime = (res.TIME / 3600).toFixed(1) + ' hours'
         }

@@ -1,29 +1,31 @@
-<div class="header-wrapper">
-  <div class="left-side-wrapper">
-    <div class="logo-wrapper" routerLink="/">
-      <img src="../../../assets/images/Logo.png" alt="Logo" />
+<div class="container">
+  <div class="header-wrapper">
+    <div class="left-side-wrapper">
+      <div class="logo-wrapper" routerLink="/">
+        <img src="../../../assets/images/Logo.png" alt="Logo" />
+      </div>
+      <div class="app-name-wrapper">Horizontek</div>
     </div>
-    <div class="app-name-wrapper">Horizontek</div>
-  </div>
-  <div class="right-side-wrapper">
-    <div class="not-authen-wrapper" *ngIf="user == null">
-      <div class="button">
-        <button class="btn btn-secondary" routerLink="/register">
-          Register
-        </button>
+    <div class="right-side-wrapper">
+      <div class="not-authen-wrapper" *ngIf="user == null">
+        <div class="button">
+          <button class="btn btn-secondary" routerLink="/register">
+            Register
+          </button>
+        </div>
+        <div class="button">
+          <button class="btn btn-primary" color="primary" routerLink="/login">
+            Login
+          </button>
+        </div>
       </div>
-      <div class="button">
-        <button class="btn btn-primary" color="primary" routerLink="/login">
-          Login
-        </button>
-      </div>
-    </div>
-    <div class="not-authen-wrapper" *ngIf="user != null">
-      <div class="button">
-        <button class="btn btn-primary" (click)="logout()">Logout</button>
-      </div>
-      <div class="button info">
-        <h3>Hi, {{ user && user.username }}<strong></strong></h3>
+      <div class="not-authen-wrapper" *ngIf="user != null">
+        <div class="button">
+          <button class="btn btn-primary" (click)="logout()">Logout</button>
+        </div>
+        <div class="button info">
+          <h3>Hi, {{ user && user.username }}<strong></strong></h3>
+        </div>
       </div>
     </div>
   </div>

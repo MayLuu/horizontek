@@ -247,7 +247,7 @@ export class InventoryPageComponent {
         position: index + 1,
         name: i.name,
         img: "alo",
-        size: i.size + " B",
+        size: (i.size / (1024 * 1024)).toFixed(2) + " MB",
         application: "Inventory",
         url: i.url
       }
@@ -357,12 +357,17 @@ export class InventoryPageComponent {
 
     console.log('body', formData)
     let res: any;
-    this.inventoryService.uploadFile(formData).subscribe(data => {
-      res = data;
+    this.inventoryService.uploadFile(formData).subscribe(
+      data => {
+        res = data;
+        this.currentProject.files?.push(res.data[0])
 
-      this.currentProject.files?.push(res.data[0])
+      }, err => {
 
-    })
+      },
+      () => this._snackBar.open("Upload successfully", "Hide")
+
+    )
 
 
     // console.log(this.inventoryService.uploadFile(form).subscribe(data => console.log('file res', data)))

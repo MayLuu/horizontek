@@ -27,8 +27,7 @@ export class PrintingService {
 
   //post to print
   print(formData: any): Observable<any> {
-    console.log('print')
-    console.log(formData)
+
     console.log(this.http.post<any>(PRINTING_API, formData))
     return this.http.post<any>(PRINTING_API, formData)
 

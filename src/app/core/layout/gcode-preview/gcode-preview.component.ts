@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { WebGLPreview } from 'gcode-preview';
 import * as THREE from 'three';
@@ -13,6 +13,8 @@ export class GcodePreviewComponent {
   file: any;
   preview: any;
   private context!: HTMLCanvasElement;
+  @Input() link = ''; // decorate the property with @Input()
+
   @ViewChild('myCanvas', { static: false }) canvas!: ElementRef;
 
 
@@ -44,7 +46,7 @@ export class GcodePreviewComponent {
     // }
 
     let response: any;
-    this.http.get("http://34.101.50.122:8010/get-gcode?gcode_file=affc7032-1d65-4044-8933-0d2db70b934c-00030d37-f0c3-11ed-9ad4-0242c0a8b002.gcode", { responseType: 'text' }).subscribe(
+    this.http.get(this.link, { responseType: 'text' }).subscribe(
       res => {
         response = res.split('\n');
         console.log(response)
