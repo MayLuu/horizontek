@@ -17,8 +17,9 @@ export class AppComponent {
     console.log('size', this.mobHeight);
     console.log(this.mobWidth)
 
-    if (this.mobWidth <= 420) {
-      this.router.navigate(['error'])
+    if (window.screen.width <= 470) {
+      console.log('true')
+      this.router.navigate(['/error'])
     }
   }
 

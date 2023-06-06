@@ -240,7 +240,6 @@ export class InventoryPageComponent {
     this.currentProject = node
     this.currentChildrens = node.files as File[];
     this.resultFiles = []
-    console.log('node', node.files)
     node.files && node.files.map((i, index) => this.resultFiles.push(Object.assign({},
       {
         id: i.id,
@@ -256,7 +255,6 @@ export class InventoryPageComponent {
     )
 
     this.tableDataSource = new MatTableDataSource(this.resultFiles)
-    console.log('table:', this.resultFiles)
 
     this.tableDataSource.paginator = this.paginator
 
