@@ -1,8 +1,9 @@
 .header-wrapper {
+    box-sizing: border-box;
     height: 70px;
-    margin: 0px 28px;
+    // margin: 0px 28px;
     width: 100%;
-    max-width: 1480px;
+    // max-width: 1480px;
     display: flex;
     justify-content: center;
     justify-content: space-between;
