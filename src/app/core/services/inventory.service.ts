@@ -63,20 +63,23 @@ export class InventoryService {
     downloadFile(fileLink: string): void {
         console.log(fileLink)
         this.http.get(fileLink, { responseType: 'blob' }).subscribe(
-            (res) => {
+            (res: Blob) => {
                 console.log("hello")
                 console.log(res)
                 // const file = new Blob([res], { type: 'text/pal' });
-                // const url = window.URL.createObjectURL(res);
+                const url = window.URL.createObjectURL(res);
                 // window.open(url);
                 // saveAs(res, res?.name + '.obj');
+                // const blob = new Blob([data], { type: 'application/octet-stream' });
 
-                const a = document.createElement('a')
-                const objectUrl = URL.createObjectURL(res)
-                a.href = objectUrl
-                a.download = 'test.obj';
-                a.click();
-                URL.revokeObjectURL(objectUrl);
+                // const a = document.createElement('a')
+                // const objectUrl = URL.createObjectURL(res)
+                // a.href = objectUrl
+                // a.download = 'test.obj';
+                // a.click();
+                // URL.revokeObjectURL(objectUrl);
+
+                saveAs(res, url + '.obj')
 
             },
             err => {
