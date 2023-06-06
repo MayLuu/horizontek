@@ -68,7 +68,6 @@ export class InventoryPrintingPageComponent {
 
     this.loadObjFileFromAPI();
 
-
   }
   ngAfterViewInit() {
     this.loadObjFileFromAPI();
