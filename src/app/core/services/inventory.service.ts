@@ -64,7 +64,7 @@ export class InventoryService {
         console.log(fileLink)
         this.http.get(fileLink, { responseType: 'blob' }).subscribe(
             (res: Blob) => {
-                console.log("hello")
+                // console.log("hello")
                 console.log(res)
                 // const file = new Blob([res], { type: 'text/pal' });
                 const url = window.URL.createObjectURL(res);
@@ -79,7 +79,7 @@ export class InventoryService {
                 // a.click();
                 // URL.revokeObjectURL(objectUrl);
 
-                var blob = new Blob([res], { type: 'application/pdf' });
+                var blob = new Blob([res], { type: 'model/obj' });
 
                 saveAs(res, url + '.obj')
 
