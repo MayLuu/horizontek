@@ -169,8 +169,11 @@
                       <button mat-menu-item>
                         <mat-icon>cloud_download</mat-icon>
                         <span
-                          ><a [href]="row.url" download="test.obj"
-                            >Link</a
+                          ><a
+                            style="text-decoration: none; color: black"
+                            [href]="'http://' + row.url"
+                            download="test.obj"
+                            >Download</a
                           ></span
                         >
                       </button>
