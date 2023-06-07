@@ -373,8 +373,20 @@ export class InventoryPageComponent {
   }
 
   getFilePreview(file: File) {
-    console.log(file.id, file.name)
-    const navigationExtras: NavigationExtras = { state: { fileId: file.id, fileName: file.name } };
+    let navigationExtras: NavigationExtras
+    console.log(this.currentNode)
+    console.log(this.currentProject)
+    console.log(file)
+    if (Object.keys(this.currentNode).length > 4) {
+      navigationExtras = { state: { fileId: file.id, fileName: file.name, projectId: this.currentProject.id, folderId: this.currentNode.id } };
+
+
+    } else {
+      // console.log(this.currentProject, 'project')
+      // formData.append('projectId', this.currentProject.id);
+      navigationExtras = { state: { fileId: file.id, fileName: file.name, projectId: this.currentNode.id, folderId: null } };
+
+    }
 
     this.router.navigate(['/inventory/preview'], navigationExtras);
 

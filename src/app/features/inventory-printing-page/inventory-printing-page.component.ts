@@ -20,6 +20,8 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 export class InventoryPrintingPageComponent {
   private fileId!: string;
   private fileName!: string;
+  private folderId!: any;
+  private projectId!: string;
   f!: File;
   url!: any;
   responseData!: Blob;
@@ -49,16 +51,19 @@ export class InventoryPrintingPageComponent {
 
     const navigation = this.router.getCurrentNavigation();
 
-    const state = navigation?.extras.state as { fileId: string, fileName: string };
+    const state = navigation?.extras.state as { fileId: string, fileName: string, projectId: string, folderId: string };
     console.log('fileId', state.fileId, 'name: ', state.fileName)
+    console.log('projectId', state.projectId, 'folderId: ', state.folderId)
     this.fileId = state.fileId;
     this.fileName = state.fileName;
-
+    this.folderId = state.folderId;
+    this.projectId = state.projectId
     this.printingForm = new FormGroup({
 
       printer: new FormControl(),
       quality: new FormControl(),
       material: new FormControl(),
+
 
     })
 
@@ -72,6 +77,12 @@ export class InventoryPrintingPageComponent {
   ngAfterViewInit() {
     this.loadObjFileFromAPI();
 
+  }
+  ngAfterViewChecked() {
+    // if (this.isIntended == false) {
+    //   this.loadObjFileFromAPI()
+
+    // }
   }
   ngAfterContentInit() {
     // this.loadObjFileFromAPI();
@@ -135,6 +146,7 @@ export class InventoryPrintingPageComponent {
   }
   switch() {
     this.isIntended = !this.isIntended
+
   }
 
   //get data for custom printer: all printers, time estimated
@@ -148,8 +160,10 @@ export class InventoryPrintingPageComponent {
     let body = new FormData()
 
     body.append('printerId', "00-1B-63-84-45-E6");
-    body.append('fileId', "ff474839-f61e-11ed-8819-0242c0a8c002");
+    body.append('fileId', this.fileId);
     body.append('status', 'PENDING');
+    // body.append('folderId', this.folderId);
+    // body.append('projectId', this.projectId);
 
     console.log(this.printingService.print(body).subscribe(
       res => {
@@ -177,11 +191,15 @@ export class InventoryPrintingPageComponent {
     body.append('quality', this.printingForm.quality);
     body.append('model', this.objLink);
     body.append('filament', 'PLA')
+    // body.append('folderId', this.folderId);
+    // body.append('projectId', this.projectId);
 
+    console.log('BODY', body)
     console.log(this.printingService.getIntentTime(body).subscribe(
       res => {
         console.log(res);
-        this.gcodeUrl = res.data
+        this.gcodeUrl = res.data;
+        this.fileId = res.id
         if (res.TIME > 3600) {
           this.intendTime = (res.TIME / 3600).toFixed(1) + ' hours'
         }

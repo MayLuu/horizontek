@@ -36,9 +36,9 @@ export class PrintingService {
 
     console.log('get intend time')
     console.log(formData)
-    console.log(this.http.post<any>(environment.api + '/slice-gcode', formData))
+    console.log(this.http.post<any>(environment.api + 'slice-gcode', formData))
 
-    return this.http.post<any>(environment.api + '/slice-gcode', formData)
+    return this.http.post<any>(environment.api + 'slice-gcode', formData)
 
   }
 
